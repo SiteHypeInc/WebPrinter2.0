@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "webprinter-content-schema-v1",
+  "title": "WebPrinter Content Schema",
+  "description": "Normalized content structure for WebPrinter automated site generation. All Firecrawl scrapes normalize into this shape before Elementor JSON injection.",
+  "type": "object",
+  "required": ["business_name", "industry", "services"],
+
+  "properties": {
+
+    "_meta": {
+      "type": "object",
+      "description": "Pipeline metadata — not injected into templates",
+      "properties": {
+        "source_url":      { "type": "string", "description": "Original URL scraped by Firecrawl" },
+        "scraped_at":      { "type": "string", "format": "date-time" },
+        "schema_version":  { "type": "string", "default": "1.0" },
+        "confidence":      { "type": "number", "minimum": 0, "maximum": 1, "description": "AI confidence score for extraction quality (0-1)" },
+        "missing_fields":  { "type": "array", "items": { "type": "string" }, "description": "Fields that couldn't be extracted — triggers fallback content" },
+        "template_id":     { "type": "string", "description": "Selected Elementor template (set by n8n after content analysis)" },
+        "design_token_id": { "type": "string", "description": "Design token preset applied (set by n8n)" }
+      }
+    },
+
+    "business_name": {
+      "type": "string",
+      "description": "Primary business name as displayed on the site",
+      "examples": ["Summit Mechanical", "Precision Roofing Co."]
+    },
+
+    "tagline": {
+      "type": "string",
+      "maxLength": 120,
+      "description": "Hero headline — extracted from H1 or meta description. Keep under 120 chars for template fit.",
+      "examples": ["Your trusted HVAC partner in Denver"]
+    },
+
+    "industry": {
+      "type": "string",
+      "description": "Normalized industry category for template selection logic",
+      "enum": ["hvac", "roofing", "plumbing", "electrical", "painting", "flooring", "siding", "drywall", "general_contractor", "landscaping", "cleaning", "pest_control", "other"]
+    },
+
+    "about_short": {
+      "type": "string",
+      "maxLength": 250,
+      "description": "1-2 sentence summary for hero subtext. If source is longer, AI summarizes to fit."
+    },
+
+    "about_long": {
+      "type": "string",
+      "maxLength": 1500,
+      "description": "Full about section — company story, history, values. Injected into About page/section."
+    },
+
+    "year_founded": {
+      "type": ["integer", "null"],
+      "description": "Extracted from about text if available. Used for '20+ years experience' badges."
+    },
+
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "description": "Core service offerings. Template handles 3-8 gracefully; 9-12 uses compact grid.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name":        { "type": "string", "maxLength": 50, "description": "Service name — short, title case" },
+          "description": { "type": "string", "maxLength": 200, "description": "1-2 sentence service description" },
+          "icon_hint":   { "type": "string", "description": "Semantic hint for icon selection (e.g. 'thermometer', 'wrench', 'shield')" },
+          "is_primary":  { "type": "boolean", "default": false, "description": "Flagged as a featured/main service — gets prominent placement" }
+        }
+      }
+    },
+
+    "service_areas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Cities/regions served. Used in footer and SEO meta.",
+      "examples": [["Denver", "Lakewood", "Arvada", "Aurora"]]
+    },
+
+    "testimonials": {
+      "type": "array",
+      "maxItems": 6,
+      "description": "Customer reviews/testimonials. Template uses top 2-3.",
+      "items": {
+        "type": "object",
+        "required": ["quote"],
+        "properties": {
+          "quote":   { "type": "string", "maxLength": 300 },
+          "author":  { "type": "string", "description": "Name + location if available" },
+          "rating":  { "type": ["number", "null"], "minimum": 1, "maximum": 5 },
+          "source":  { "type": "string", "description": "Where the review came from", "enum": ["google", "yelp", "bbb", "facebook", "website", "other"] }
+        }
+      }
+    },
+
+    "team": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Team members / owners. Optional — many small businesses don't list these.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name":  { "type": "string" },
+          "role":  { "type": "string" },
+          "bio":   { "type": "string", "maxLength": 300 },
+          "image": { "$ref": "#/$defs/image" }
+        }
+      }
+    },
+
+    "contact": {
+      "type": "object",
+      "description": "All contact information — at least phone or email required for a usable site",
+      "properties": {
+        "phone":   { "type": "string", "description": "Primary phone, formatted" },
+        "email":   { "type": "string", "format": "email" },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city":   { "type": "string" },
+            "state":  { "type": "string" },
+            "zip":    { "type": "string" }
+          }
+        },
+        "hours": {
+          "type": "array",
+          "description": "Business hours. Normalize to consistent format.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "days":  { "type": "string", "examples": ["Mon-Fri", "Sat", "Sun"] },
+              "hours": { "type": "string", "examples": ["8:00 AM - 5:00 PM", "Closed"] }
+            }
+          }
+        }
+      }
+    },
+
+    "social": {
+      "type": "object",
+      "description": "Social media links — injected into footer and header icons",
+      "properties": {
+        "facebook":  { "type": "string", "format": "uri" },
+        "instagram": { "type": "string", "format": "uri" },
+        "youtube":   { "type": "string", "format": "uri" },
+        "linkedin":  { "type": "string", "format": "uri" },
+        "twitter":   { "type": "string", "format": "uri" },
+        "google_business": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "images": {
+      "type": "object",
+      "description": "Scraped images categorized by usage. URLs point to original sources — pipeline downloads and optimizes.",
+      "properties": {
+        "logo":       { "$ref": "#/$defs/image" },
+        "hero":       { "$ref": "#/$defs/image" },
+        "about":      { "$ref": "#/$defs/image" },
+        "gallery":    { "type": "array", "maxItems": 12, "items": { "$ref": "#/$defs/image" } },
+        "team_photo": { "$ref": "#/$defs/image" }
+      }
+    },
+
+    "credentials": {
+      "type": "array",
+      "description": "Licenses, certifications, awards — displayed as trust badges",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "examples": ["EPA Certified", "BBB A+ Rated", "Licensed & Insured"] },
+          "type": { "type": "string", "enum": ["license", "certification", "award", "membership", "insurance"] }
+        }
+      }
+    },
+
+    "cta": {
+      "type": "object",
+      "description": "Call-to-action defaults. Can be overridden by design tokens.",
+      "properties": {
+        "primary_text":   { "type": "string", "default": "Get a free quote", "maxLength": 30 },
+        "primary_url":    { "type": "string", "description": "Link target — usually #contact or a form URL" },
+        "secondary_text": { "type": "string", "default": "Call now", "maxLength": 20 },
+        "phone_display":  { "type": "string", "description": "Formatted phone for CTA buttons" }
+      }
+    },
+
+    "seo": {
+      "type": "object",
+      "description": "SEO metadata — auto-generated from content if not explicitly scraped",
+      "properties": {
+        "title":       { "type": "string", "maxLength": 60 },
+        "description": { "type": "string", "maxLength": 160 },
+        "keywords":    { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+
+  "$defs": {
+    "image": {
+      "type": "object",
+      "properties": {
+        "url":    { "type": "string", "format": "uri", "description": "Source URL — pipeline downloads + optimizes" },
+        "alt":    { "type": "string", "description": "Alt text — AI generates if missing" },
+        "width":  { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    }
+  }
+}

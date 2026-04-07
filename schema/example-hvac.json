@@ -1,0 +1,142 @@
+{
+  "_meta": {
+    "source_url": "https://www.summitmechanicaldenver.com",
+    "scraped_at": "2026-04-06T02:15:00Z",
+    "schema_version": "1.0",
+    "confidence": 0.87,
+    "missing_fields": ["team", "images.hero", "contact.hours"],
+    "template_id": "contractor-standard-v2",
+    "design_token_id": "bold-contractor"
+  },
+
+  "business_name": "Summit Mechanical",
+
+  "tagline": "Your trusted HVAC partner in Denver",
+
+  "industry": "hvac",
+
+  "about_short": "Family-owned since 2003. We keep Denver homes comfortable year-round with expert heating, cooling, and ventilation services.",
+
+  "about_long": "Summit Mechanical was founded by Mike and Laura Chen in 2003. What started as a two-person operation has grown into Denver's most trusted HVAC team, with 14 certified technicians serving the front range. We specialize in residential and light commercial HVAC — from emergency furnace repairs to full system replacements. We're proud to maintain a 4.9 rating across 340+ reviews and hold an A+ rating with the Better Business Bureau.",
+
+  "year_founded": 2003,
+
+  "services": [
+    {
+      "name": "AC Installation",
+      "description": "Central air, mini-splits, and ductless systems for every home size.",
+      "icon_hint": "snowflake",
+      "is_primary": true
+    },
+    {
+      "name": "Furnace Repair",
+      "description": "Same-day diagnostics and repair for all major furnace brands.",
+      "icon_hint": "flame",
+      "is_primary": true
+    },
+    {
+      "name": "Duct Cleaning",
+      "description": "Improve air quality and efficiency with professional duct service.",
+      "icon_hint": "wind",
+      "is_primary": false
+    },
+    {
+      "name": "Heat Pump Systems",
+      "description": "Energy-efficient heating and cooling in one unit. We install and service all brands.",
+      "icon_hint": "thermometer",
+      "is_primary": false
+    },
+    {
+      "name": "Indoor Air Quality",
+      "description": "Air purifiers, humidifiers, and filtration systems for healthier homes.",
+      "icon_hint": "shield",
+      "is_primary": false
+    },
+    {
+      "name": "Maintenance Plans",
+      "description": "Annual tune-ups that prevent breakdowns and extend system life.",
+      "icon_hint": "calendar",
+      "is_primary": false
+    }
+  ],
+
+  "service_areas": ["Denver", "Lakewood", "Arvada", "Aurora", "Littleton", "Englewood", "Wheat Ridge"],
+
+  "testimonials": [
+    {
+      "quote": "They replaced our entire HVAC system in one day. Professional, clean, and the price was exactly what they quoted.",
+      "author": "Sarah M., Lakewood",
+      "rating": 5,
+      "source": "google"
+    },
+    {
+      "quote": "Called at 6am on a Sunday when our furnace died. Tech was here by 8. Can't recommend them enough.",
+      "author": "James K., Arvada",
+      "rating": 5,
+      "source": "google"
+    },
+    {
+      "quote": "Fair pricing, honest techs, and they actually show up on time. Rare combo these days.",
+      "author": "Linda P., Denver",
+      "rating": 5,
+      "source": "yelp"
+    }
+  ],
+
+  "team": [],
+
+  "contact": {
+    "phone": "(303) 555-0147",
+    "email": "info@summitmechanical.com",
+    "address": {
+      "street": "4521 W Colfax Ave",
+      "city": "Denver",
+      "state": "CO",
+      "zip": "80204"
+    },
+    "hours": []
+  },
+
+  "social": {
+    "facebook": "https://facebook.com/summitmechanicaldenver",
+    "google_business": "https://g.page/summit-mechanical-denver"
+  },
+
+  "images": {
+    "logo": {
+      "url": "https://www.summitmechanicaldenver.com/wp-content/uploads/logo.png",
+      "alt": "Summit Mechanical logo",
+      "width": 280,
+      "height": 64
+    },
+    "hero": null,
+    "about": {
+      "url": "https://www.summitmechanicaldenver.com/wp-content/uploads/team-van.jpg",
+      "alt": "Summit Mechanical service van",
+      "width": 800,
+      "height": 600
+    },
+    "gallery": [],
+    "team_photo": null
+  },
+
+  "credentials": [
+    { "name": "EPA Certified", "type": "certification" },
+    { "name": "BBB A+ Rated", "type": "award" },
+    { "name": "Licensed & Insured", "type": "license" },
+    { "name": "NATE Certified Technicians", "type": "certification" }
+  ],
+
+  "cta": {
+    "primary_text": "Get a free estimate",
+    "primary_url": "#contact",
+    "secondary_text": "Call now",
+    "phone_display": "(303) 555-0147"
+  },
+
+  "seo": {
+    "title": "Summit Mechanical | Denver HVAC Repair & Installation",
+    "description": "Denver's trusted HVAC company since 2003. AC installation, furnace repair, and duct cleaning. 4.9 stars, 340+ reviews. Call (303) 555-0147.",
+    "keywords": ["denver hvac", "furnace repair denver", "ac installation denver", "hvac contractor near me"]
+  }
+}
