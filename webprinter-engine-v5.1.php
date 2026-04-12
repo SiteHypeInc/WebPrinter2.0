@@ -231,6 +231,12 @@ class WebPrinter_Engine {
         // -----------------------------------------------------------
         $replacements = $this->build_bracket_replacements();
 
+        // 5b. Add image URL tokens for custom_css hero/about/service/logo
+        $replacements['[HERO_IMAGE_URL]']    = ! empty( $images['hero']['url'] )    ? $images['hero']['url']    : '';
+        $replacements['[ABOUT_IMAGE_URL]']   = ! empty( $images['about']['url'] )   ? $images['about']['url']   : '';
+        $replacements['[SERVICE_IMAGE_URL]'] = ! empty( $images['service']['url'] ) ? $images['service']['url'] : '';
+        $replacements['[LOGO_URL]']          = ! empty( $images['logo']['url'] )    ? $images['logo']['url']    : '';
+
         // -----------------------------------------------------------
         // 6. DEPLOY PAGES
         // -----------------------------------------------------------
