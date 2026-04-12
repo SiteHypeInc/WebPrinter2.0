@@ -184,11 +184,25 @@ class WebPrinter_Engine {
         // -----------------------------------------------------------
         // 3a. BLOG NAME + FRONT PAGE
         // -----------------------------------------------------------
+        // Unhook Elementor Kit Manager — it fires on updated_option and
+        // throws "Access denied" in REST context (no nonce/ajax caps).
+        global $wp_filter;
+        $saved_updated_option = null;
+        if ( isset( $wp_filter['updated_option'] ) ) {
+            $saved_updated_option = clone $wp_filter['updated_option'];
+            remove_all_filters( 'updated_option' );
+        }
+
         $business_name = sanitize_text_field( $this->resolve( 'business_name' ) );
         update_option( 'blogname', $business_name );
         wp_cache_delete( 'blogname', 'options' );
         update_option( 'show_on_front', 'page' );
         update_option( 'page_on_front', 6 );
+
+        // Restore hooks.
+        if ( $saved_updated_option ) {
+            $wp_filter['updated_option'] = $saved_updated_option;
+        }
 
         // -----------------------------------------------------------
         // 3b. NAVIGATION MENU
