@@ -210,6 +210,55 @@
       "unsplash_photo_id": "1497366811353-6870744d04b2",
       "original_url": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80",
       "license": "Unsplash License (https://unsplash.com/license)"
+    },
+    {
+      "file": "saas/hero/saas-hero-01.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "7947968",
+      "original_url": "https://www.pexels.com/photo/7947968/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/hero/saas-hero-02.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "7414216",
+      "original_url": "https://www.pexels.com/photo/7414216/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/action/saas-action-01.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "6804068",
+      "original_url": "https://www.pexels.com/photo/6804068/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/action/saas-action-02.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "33811800",
+      "original_url": "https://www.pexels.com/photo/33811800/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/team/saas-team-01.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "97080",
+      "original_url": "https://www.pexels.com/photo/97080/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/generic/saas-generic-01.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "27128551",
+      "original_url": "https://www.pexels.com/photo/27128551/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
+    },
+    {
+      "file": "saas/generic/saas-generic-02.jpg",
+      "source": "pexels",
+      "pexels_photo_id": "6804612",
+      "original_url": "https://www.pexels.com/photo/6804612/",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     }
   ]
 }

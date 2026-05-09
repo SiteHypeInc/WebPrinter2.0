@@ -38,7 +38,7 @@
     "industry": {
       "type": "string",
       "description": "Normalized industry category for template selection logic",
-      "enum": ["hvac", "roofing", "plumbing", "electrical", "painting", "flooring", "siding", "drywall", "general_contractor", "landscaping", "cleaning", "pest_control", "other"]
+      "enum": ["hvac", "roofing", "plumbing", "electrical", "painting", "flooring", "siding", "drywall", "general_contractor", "landscaping", "cleaning", "pest_control", "saas", "agency", "other"]
     },
 
     "about_short": {

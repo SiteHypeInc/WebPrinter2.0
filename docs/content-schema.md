@@ -37,7 +37,7 @@ template adapts via `_wp_if` markers:
 
 `hvac`, `roofing`, `plumbing`, `electrical`, `painting`, `flooring`,
 `siding`, `drywall`, `general_contractor`, `landscaping`, `cleaning`,
-`pest_control`, `other`
+`pest_control`, `saas`, `agency`, `other`
 
 ### Services array
 

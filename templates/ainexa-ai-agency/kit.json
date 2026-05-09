@@ -873,5 +873,6 @@
   },
   "_kit_name": "ainexa-ai-agency",
   "_kit_version": "1.0",
-  "_source": "{{business_name}} AI Agency Elementor Pro Template Kit"
+  "_source": "{{business_name}} AI Agency Elementor Pro Template Kit",
+  "custom_css": "/* WebPrinter / Ainexa: hide HFE/Hello-Elementor default site-header \u2014 kit hero section already contains the real nav. */\n#site-header { display: none !important; }\n"
 }

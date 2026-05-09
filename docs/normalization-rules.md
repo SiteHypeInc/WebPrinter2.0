@@ -29,6 +29,11 @@ Map to enum based on keywords in services, about text, and meta:
 - "floor", "tile", "hardwood", "carpet" → `flooring`
 - "siding", "vinyl", "fiber cement" → `siding`
 - "drywall", "sheetrock", "plaster" → `drywall`
+- "saas", "software-as-a-service", "platform", "dashboard", "subscription",
+  "api", "cloud software", "web app", "mobile app", "estimating software",
+  "crm", "erp" → `saas`
+- "agency", "marketing agency", "creative agency", "consulting", "studio",
+  "design firm", "branding", "ai agency", "digital agency" → `agency`
 - Multiple matches or unclear → `general_contractor`
 - None of the above → `other`
 
