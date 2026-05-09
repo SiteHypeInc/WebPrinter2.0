@@ -706,5 +706,7 @@
   "viewport_lg": 1025,
   "_kit_name": "imbo-saas-v1",
   "_kit_version": "1.0",
-  "_source": "imbo-software-development-it-solutions-elementor-kit"
+  "_source": "imbo-software-development-it-solutions-elementor-kit",
+  "body_background_background": "classic",
+  "body_background_color": "#000000"
 }
