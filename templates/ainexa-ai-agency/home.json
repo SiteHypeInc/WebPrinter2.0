@@ -590,7 +590,7 @@
               "id": "5503826d",
               "settings": {
                 "content_width": "full",
-                "title": "UNLOCK THE FUTURE WITH",
+                "title": "INTRODUCING",
                 "sub_title": "",
                 "title_s": "",
                 "sub_title_align": "left",
@@ -1054,7 +1054,7 @@
                       "id": "86d05ed",
                       "settings": {
                         "content_width": "full",
-                        "editor": "Growth in Client Succes",
+                        "editor": "",
                         "align": "left",
                         "_element_width": "initial",
                         "_element_custom_width": {
@@ -1120,7 +1120,7 @@
                   "id": "591ea62a",
                   "settings": {
                     "content_width": "full",
-                    "editor": "We harness the power of AI to drive innovation, efficiency, and growth for your business ",
+                    "editor": "{{tagline}}",
                     "align": "right",
                     "_element_width": "initial",
                     "_element_custom_width": {
@@ -2007,7 +2007,7 @@
                       "id": "682833cb",
                       "settings": {
                         "content_width": "full",
-                        "editor": "Harness the power of big data to make informed decisions",
+                        "editor": "{{services._item.description}}",
                         "align": "right",
                         "align_tablet": "right",
                         "align_mobile": "left",
@@ -2214,7 +2214,7 @@
                       "id": "4a497763",
                       "settings": {
                         "content_width": "full",
-                        "editor": "Streamline operations and reduce costs with advanced automation technologies",
+                        "editor": "{{services._item.description}}",
                         "align": "right",
                         "align_tablet": "right",
                         "align_mobile": "left",
@@ -2290,7 +2290,7 @@
           "id": "c7d4030",
           "settings": {
             "content_width": "full",
-            "title": "Intelligent solutions to your business, driving growth, efficiency, and innovation.",
+            "title": "{{about_short}}",
             "_title": "Heading",
             "__globals__": {
               "typography_typography": "globals/typography?id=primary"
@@ -2500,7 +2500,7 @@
               "id": "430e3726",
               "settings": {
                 "content_width": "full",
-                "title": "Measuring Success Through AI Innovation",
+                "title": "Our Impact",
                 "header_size": "h3",
                 "__globals__": {
                   "typography_typography": "globals/typography?id=secondary"
@@ -2965,7 +2965,7 @@
                       "id": "2958ba88",
                       "settings": {
                         "content_width": "full",
-                        "editor": "300% Average ROI for Our Clients",
+                        "editor": "",
                         "align": "right",
                         "align_tablet": "right",
                         "align_mobile": "left",
@@ -3581,7 +3581,7 @@
                               "id": "35f57ab6",
                               "settings": {
                                 "content_width": "full",
-                                "editor": "Faster proof of concept",
+                                "editor": "",
                                 "align": "left",
                                 "align_tablet": "left",
                                 "align_mobile": "left",
@@ -3689,7 +3689,7 @@
                               "id": "101bef03",
                               "settings": {
                                 "content_width": "full",
-                                "editor": "Decreased technology debt",
+                                "editor": "",
                                 "align": "left",
                                 "align_tablet": "left",
                                 "align_mobile": "left",
@@ -4430,7 +4430,7 @@
                   "id": "18bb5470",
                   "settings": {
                     "content_width": "full",
-                    "title": "Healthcare",
+                    "title": "{{services._item.name}}",
                     "header_size": "h4",
                     "align": "center",
                     "_element_width": "inherit",
@@ -4590,7 +4590,7 @@
                   "id": "66085f59",
                   "settings": {
                     "content_width": "full",
-                    "title": "Corporate Enterprises",
+                    "title": "{{services._item.name}}",
                     "header_size": "h3",
                     "align": "center",
                     "_element_width": "inherit",
@@ -4749,7 +4749,7 @@
                   "id": "21e9007c",
                   "settings": {
                     "content_width": "full",
-                    "title": "Retail & eCommerce",
+                    "title": "{{services._item.name}}",
                     "header_size": "h4",
                     "align": "center",
                     "_element_width": "auto",
@@ -4908,7 +4908,7 @@
                   "id": "30b111c3",
                   "settings": {
                     "content_width": "full",
-                    "title": "Marketing & Advertising",
+                    "title": "{{services._item.name}}",
                     "header_size": "h4",
                     "align": "center",
                     "_element_width": "auto",
@@ -5063,7 +5063,7 @@
                   "id": "53a3217c",
                   "settings": {
                     "content_width": "full",
-                    "title": "Financial Institutions",
+                    "title": "{{services._item.name}}",
                     "header_size": "h4",
                     "align": "center",
                     "_element_width": "auto",
@@ -5223,7 +5223,7 @@
                   "id": "18695d51",
                   "settings": {
                     "content_width": "full",
-                    "title": "Your Indusrty",
+                    "title": "{{services._item.name}}",
                     "header_size": "h4",
                     "align": "center",
                     "_element_width": "inherit",
@@ -5343,7 +5343,7 @@
                   "id": "4e60bc2",
                   "settings": {
                     "content_width": "full",
-                    "title": "Join the AI Revolution",
+                    "title": "{{cta.primary_text}}",
                     "pa_condition_repeater": [],
                     "premium_tooltip_text": "Hi, I'm a global tooltip.",
                     "premium_tooltip_position": "top,bottom"

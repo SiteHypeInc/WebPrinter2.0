@@ -2843,7 +2843,7 @@
                               "id": "62ccddbb",
                               "settings": {
                                 "content_width": "full",
-                                "editor": "Faster proof of concept",
+                                "editor": "",
                                 "align": "left",
                                 "align_tablet": "left",
                                 "align_mobile": "left",
@@ -2951,7 +2951,7 @@
                               "id": "978b2be",
                               "settings": {
                                 "content_width": "full",
-                                "editor": "Decreased technology debt",
+                                "editor": "",
                                 "align": "left",
                                 "align_tablet": "left",
                                 "align_mobile": "left",

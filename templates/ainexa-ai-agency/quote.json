@@ -378,7 +378,7 @@
                 "field_label": "Choose Your Indusrty",
                 "placeholder": "Email",
                 "_id": "fc59fcb",
-                "field_options": "Financial Institutions\nHealthcare Retail & eCommerce\nCorporate Enterprises\nOther\nMarketing & Advertising",
+                "field_options": "Roofing\nGeneral Contracting\nElectrical\nPlumbing\nHVAC\nLandscaping\nOther",
                 "width": "50"
               },
               {
