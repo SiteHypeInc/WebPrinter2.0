@@ -24,7 +24,7 @@ Firecrawl scrape → Content normalization (AI) → Content schema JSON
 ```
 WebPrinter2.0/
 ├── README.md                          ← You are here
-├── webprinter-engine-v5.1.php         ← WordPress plugin (drop into wp-content/plugins/)
+├── webprinter-engine-v5.2-gold.php    ← WordPress plugin (drop into wp-content/plugins/)
 ├── docs/
 │   ├── content-schema.md              ← Content schema spec + field reference
 │   ├── template-authoring.md          ← How to create/convert templates
@@ -33,16 +33,19 @@ WebPrinter2.0/
 ├── schema/
 │   ├── webprinter-content-schema.json ← JSON Schema (validation)
 │   └── example-hvac.json              ← Filled example (Summit Mechanical)
+├── scripts/
+│   └── convert_template.py            ← Elementor JSON → WebPrinter template converter
 └── templates/
-    └── bold-v2/                       ← Example template set
-        └── about.json                 ← About page with v5 markers
+    ├── bold-v2/                       ← Example template set
+    │   └── about.json                 ← About page with v5 markers
+    └── saas-v1/                       ← SaaS template (dark theme, red accent)
 ```
 
 ## Quick start
 
 ### 1. Install the plugin
 
-Copy `webprinter-engine-v5.1.php` to your WordPress multisite `wp-content/plugins/` and activate network-wide.
+Copy `webprinter-engine-v5.2-gold.php` to your WordPress multisite `wp-content/plugins/` and activate network-wide. For replacing an older version on a Hostinger site (where REST plugin upload is blocked by `DISALLOW_FILE_MODS`), see the cookie-auth flow in `webprinter-ops/replace-plugin.sh`.
 
 Add to `wp-config.php`:
 ```php
@@ -71,6 +74,7 @@ See `docs/template-authoring.md` for the marker system. Short version: grab any 
 
 ## Version history
 
+- **v5.2-gold** — `_wp_stock` random trade stock, `_wp_keep` opt-out of auto-purge, stock manifest loader (`templates/_stock/manifest.json`), Elementor Kit Manager unhook (fixes REST "Access denied"), image URL bracket tokens for custom CSS backgrounds, blacklist-based kit.json passthrough
 - **v5.1** — Widget-internal array repeats (icon-list, price-table, slides, etc.), PHP 8.0 polyfill
 - **v5.0** — Smart template engine with `_wp_repeat`, `_wp_if`, `{{dot.notation}}`, expanded design tokens, full backward compat with v4
 - **v4.7** — Template-agnostic REST endpoint, `_wp_img` image slots, Breeze cache management, HFE support

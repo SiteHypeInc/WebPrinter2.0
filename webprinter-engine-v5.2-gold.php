@@ -2,22 +2,25 @@
 /**
  * Plugin Name: WebPrinter Engine
  * Description: Smart template engine — deploys contractor demo sites from n8n with variable-length content.
- * Version:     5.1
+ * Version:     5.2
  * Author:      Team Platypus
  *
  * REQUIRES in wp-config.php:
- *   define( 'WP_TEMPLATE_BASE', 'https://raw.githubusercontent.com/SiteHypeInc/WebPrinterBoltjsonPHP/main' );
+ *   define( 'WP_TEMPLATE_BASE', 'https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates' );
  *
- * v5 UPGRADE NOTES:
- *   - Accepts structured JSON payload (nested objects, arrays)
- *   - _wp_repeat: clones elements per array item (services, testimonials, etc.)
- *   - _wp_repeat inside widget settings: handles icon-list, price-table, slides, etc.
- *   - _wp_if: conditionally includes/removes sections
- *   - {{dot.notation}} tokens resolve from nested payload
- *   - Backward compatible with [BRACKET TOKEN] format
- *   - Expanded design token support (full palette, fonts)
- *   - Elementor element IDs auto-regenerated on clones
- *   - Graceful pass-through: unknown markers are ignored, never errors
+ * v5.2 GOLD STANDARD — DO NOT MODIFY WITHOUT JOHN'S APPROVAL
+ *   - _wp_stock: random stock photo from per-trade library
+ *   - _wp_keep: prevents auto-purge from replacing an image
+ *   - Auto-purge: any unmarked image replaced with random trade stock
+ *   - Stock manifest loader (lazy, from templates/_stock/manifest.json)
+ *   - Elementor Kit Manager unhook (prevents REST "Access denied")
+ *   - Image URL bracket tokens for custom CSS backgrounds
+ *   - _wp_repeat: element-level + widget-internal (icon-list, slides, etc.)
+ *   - _wp_if: conditional sections
+ *   - {{dot.notation}} + [BRACKET] token injection
+ *   - Design tokens (system colors + typography)
+ *   - Full backward compat with v4 flat payloads
+ *   - PHP 8.0 polyfill for array_is_list
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -32,11 +35,10 @@ if ( ! function_exists( 'array_is_list' ) ) {
 
 class WebPrinter_Engine {
 
-    const VERSION = '5.1';
+    const VERSION = '5.2';
 
     /**
      * Image slot keys -> payload paths.
-     * Supports dot notation for nested payload: "images.hero.url"
      */
     const IMAGE_SLOTS = [
         'hero'    => 'images.hero',
@@ -48,6 +50,13 @@ class WebPrinter_Engine {
 
     /** Flattened payload data — built once per deploy. */
     private array $payload = [];
+
+    /** Current trade — set once per deploy, used by stock library. */
+    private string $current_trade = '';
+
+    /** Stock manifest cache — loaded once per deploy. */
+    private array $stock_manifest = [];
+    private bool $stock_manifest_loaded = false;
 
     public function __construct() {
         add_action( 'rest_api_init', [ $this, 'register_routes' ] );
@@ -157,6 +166,9 @@ class WebPrinter_Engine {
         // Normalize v4 field names to v5 if needed
         $this->normalize_payload_compat();
 
+        // Set current trade for stock library lookups
+        $this->current_trade = strtolower( sanitize_text_field( $this->resolve( 'industry', $this->resolve( 'trade', 'general' ) ) ) );
+
         // -----------------------------------------------------------
         // 2. TEMPLATE BASE URL
         // -----------------------------------------------------------
@@ -197,7 +209,10 @@ class WebPrinter_Engine {
         update_option( 'blogname', $business_name );
         wp_cache_delete( 'blogname', 'options' );
         update_option( 'show_on_front', 'page' );
-        update_option( 'page_on_front', 6 );
+        $home_page = get_page_by_path( 'home' );
+        if ( $home_page ) {
+            update_option( 'page_on_front', $home_page->ID );
+        }
 
         // Restore hooks.
         if ( $saved_updated_option ) {
@@ -210,9 +225,9 @@ class WebPrinter_Engine {
         $this->setup_navigation();
 
         // -----------------------------------------------------------
-        // 3c. DESIGN TOKENS → ELEMENTOR KIT
+        // 3c. DESIGN TOKENS → ELEMENTOR KIT (kit.json + brand_mode)
         // -----------------------------------------------------------
-        $this->apply_design_tokens( $template );
+        $this->apply_design_tokens( $template, $template_base );
 
         // -----------------------------------------------------------
         // 3d. CLEAR ALL ELEMENTOR CSS ONCE
@@ -464,10 +479,16 @@ class WebPrinter_Engine {
         // Step 2b: Widget-internal array repeats (icon_list, price_table, etc.)
         $elements = $this->process_settings_repeats( $elements );
 
-        // Step 3: Image injection (unchanged from v4, works recursively)
+        // Step 3: Scraped image injection (_wp_img markers)
         $elements = $this->apply_image_overrides( $elements, $images );
 
-        // Step 4: Token replacement (both formats)
+        // Step 4a: Intentional stock photos (_wp_stock markers)
+        $elements = $this->process_stock_images( $elements );
+
+        // Step 4b: Auto-purge any remaining unmarked images with random stock
+        $elements = $this->purge_placeholder_images( $elements );
+
+        // Step 5: Token replacement (both formats)
         $json = wp_json_encode( $elements, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
         // v4 bracket tokens: [COMPANY NAME] etc.
@@ -958,91 +979,138 @@ class WebPrinter_Engine {
     }
 
     // =================================================================
-    // DESIGN TOKENS
+    // DESIGN TOKENS + KIT IMPORT
     // =================================================================
 
     /**
      * Apply design tokens to Elementor's kit settings.
      *
-     * v5 supports full system colors + typography via payload:
-     *   "design_tokens": {
-     *     "colors": {
-     *       "primary": "#1A3A5C",
-     *       "secondary": "#C9A84C",
-     *       "text": "#2C2C2A",
-     *       "accent": "#D85A30"
-     *     },
-     *     "fonts": {
-     *       "primary": "Montserrat",
-     *       "secondary": "Open Sans"
-     *     }
-     *   }
+     * v5.2 upgrade: fetches kit.json from the template repo for the full
+     * design system (system colors, custom colors, all typography presets).
      *
-     * Falls back to per-template accent colors if no tokens provided.
+     * brand_mode (from payload):
+     *   "template" (default) → use kit.json colors as-is
+     *   "client"             → override system colors with scraped brand colors
+     *
+     * Falls back to per-template defaults if no kit.json exists.
      */
-    private function apply_design_tokens( string $template ) {
-        $tokens = $this->resolve( 'design_tokens', [] );
-
-        // --- COLORS ---
-        $template_defaults = [
-            'authority-v2' => [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ],
-            'green-v2'     => [ 'primary' => '#2E7D32', 'accent' => '#4CAF50' ],
-            'premium-v2'   => [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ],
-            'bold-v2'      => [ 'primary' => '#1B1B1B', 'accent' => '#D85A30' ],
-        ];
-        $defaults = $template_defaults[ strtolower( $template ) ] ?? [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ];
-
-        $colors = is_array( $tokens['colors'] ?? null ) ? $tokens['colors'] : [];
-
-        $system_colors = [
-            [ '_id' => 'primary',   'title' => 'Primary',   'color' => $colors['primary']   ?? $defaults['primary'] ],
-            [ '_id' => 'secondary', 'title' => 'Secondary', 'color' => $colors['secondary'] ?? '#54595F' ],
-            [ '_id' => 'text',      'title' => 'Text',      'color' => $colors['text']      ?? '#2C2C2A' ],
-            [ '_id' => 'accent',    'title' => 'Accent',    'color' => $colors['accent']     ?? $defaults['accent'] ],
-        ];
-
+    private function apply_design_tokens( string $template, string $template_base ) {
         $kit_id = (int) get_option( 'elementor_active_kit' );
         if ( ! $kit_id ) return;
 
         $settings = get_post_meta( $kit_id, '_elementor_page_settings', true );
         if ( ! is_array( $settings ) ) $settings = [];
 
-        $settings['system_colors'] = $system_colors;
+        // -----------------------------------------------------------
+        // Step 1: Try to fetch kit.json from the template repo
+        // -----------------------------------------------------------
+        $kit_data   = null;
+        $kit_url    = $template_base . 'kit.json';
+        $kit_response = wp_remote_get( $kit_url, [ 'timeout' => 10 ] );
 
-        // --- TYPOGRAPHY ---
-        $fonts = is_array( $tokens['fonts'] ?? null ) ? $tokens['fonts'] : [];
-        if ( ! empty( $fonts['primary'] ) || ! empty( $fonts['secondary'] ) ) {
-            $settings['system_typography'] = [
-                [
-                    '_id'                       => 'primary',
-                    'title'                     => 'Primary',
-                    'typography_font_family'    => $fonts['primary'] ?? 'Montserrat',
-                    'typography_font_weight'    => '600',
-                ],
-                [
-                    '_id'                       => 'secondary',
-                    'title'                     => 'Secondary',
-                    'typography_font_family'    => $fonts['secondary'] ?? 'Open Sans',
-                    'typography_font_weight'    => '400',
-                ],
-                [
-                    '_id'                       => 'text',
-                    'title'                     => 'Text',
-                    'typography_font_family'    => $fonts['secondary'] ?? 'Open Sans',
-                    'typography_font_weight'    => '400',
-                ],
-                [
-                    '_id'                       => 'accent',
-                    'title'                     => 'Accent',
-                    'typography_font_family'    => $fonts['primary'] ?? 'Montserrat',
-                    'typography_font_weight'    => '700',
-                ],
+        if ( ! is_wp_error( $kit_response ) && wp_remote_retrieve_response_code( $kit_response ) === 200 ) {
+            $kit_body = wp_remote_retrieve_body( $kit_response );
+            $kit_data = json_decode( $kit_body, true );
+        }
+
+        if ( is_array( $kit_data ) ) {
+            // -----------------------------------------------------------
+            // Kit.json found — import the full design system
+            // -----------------------------------------------------------
+
+            // System colors from kit
+            if ( ! empty( $kit_data['system_colors'] ) ) {
+                $settings['system_colors'] = $kit_data['system_colors'];
+            }
+
+            // Custom colors from kit (blur effects, overlays, etc.)
+            if ( ! empty( $kit_data['custom_colors'] ) ) {
+                $settings['custom_colors'] = $kit_data['custom_colors'];
+            }
+
+            // System typography from kit
+            if ( ! empty( $kit_data['system_typography'] ) ) {
+                $settings['system_typography'] = $kit_data['system_typography'];
+            }
+
+            // Custom typography from kit (all heading/body presets)
+            if ( ! empty( $kit_data['custom_typography'] ) ) {
+                $settings['custom_typography'] = $kit_data['custom_typography'];
+            }
+
+            // Pass through ALL other kit settings (body background, viewports,
+            // footer text, custom CSS, etc.) — blacklist our metadata keys only.
+            $skip_keys = [
+                'system_colors', 'custom_colors',
+                'system_typography', 'custom_typography',
+                '_kit_name', '_kit_version', '_source',
+            ];
+            foreach ( $kit_data as $key => $value ) {
+                if ( ! in_array( $key, $skip_keys, true ) && ! str_starts_with( $key, '_' ) ) {
+                    $settings[$key] = $value;
+                }
+            }
+
+        } else {
+            // -----------------------------------------------------------
+            // No kit.json — fall back to per-template hardcoded defaults
+            // -----------------------------------------------------------
+            $template_defaults = [
+                'authority-v2' => [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ],
+                'green-v2'     => [ 'primary' => '#2E7D32', 'accent' => '#4CAF50' ],
+                'premium-v2'   => [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ],
+                'bold-v2'      => [ 'primary' => '#1B1B1B', 'accent' => '#D85A30' ],
+            ];
+            $defaults = $template_defaults[ strtolower( $template ) ] ?? [ 'primary' => '#1A3A5C', 'accent' => '#C9A84C' ];
+
+            $settings['system_colors'] = [
+                [ '_id' => 'primary',   'title' => 'Primary',   'color' => $defaults['primary'] ],
+                [ '_id' => 'secondary', 'title' => 'Secondary', 'color' => '#54595F' ],
+                [ '_id' => 'text',      'title' => 'Text',      'color' => '#2C2C2A' ],
+                [ '_id' => 'accent',    'title' => 'Accent',    'color' => $defaults['accent'] ],
             ];
         }
 
+        // -----------------------------------------------------------
+        // Step 2: brand_mode override
+        // -----------------------------------------------------------
+        $brand_mode = $this->resolve( 'brand_mode', 'template' );
+        $tokens     = $this->resolve( 'design_tokens', [] );
+        $colors     = is_array( $tokens['colors'] ?? null ) ? $tokens['colors'] : [];
+
+        if ( $brand_mode === 'client' && ! empty( $colors ) ) {
+            // Override system colors with scraped brand colors
+            $system = $settings['system_colors'] ?? [];
+            foreach ( $system as &$entry ) {
+                $id = $entry['_id'] ?? '';
+                if ( isset( $colors[$id] ) ) {
+                    $entry['color'] = sanitize_hex_color( $colors[$id] ) ?: $entry['color'];
+                }
+            }
+            $settings['system_colors'] = $system;
+        }
+
+        // Override typography from payload if provided
+        $fonts = is_array( $tokens['fonts'] ?? null ) ? $tokens['fonts'] : [];
+        if ( $brand_mode === 'client' && ( ! empty( $fonts['primary'] ) || ! empty( $fonts['secondary'] ) ) ) {
+            $system_typo = $settings['system_typography'] ?? [];
+            foreach ( $system_typo as &$entry ) {
+                $id = $entry['_id'] ?? '';
+                if ( in_array( $id, [ 'primary', 'accent' ] ) && ! empty( $fonts['primary'] ) ) {
+                    $entry['typography_font_family'] = $fonts['primary'];
+                }
+                if ( in_array( $id, [ 'secondary', 'text' ] ) && ! empty( $fonts['secondary'] ) ) {
+                    $entry['typography_font_family'] = $fonts['secondary'];
+                }
+            }
+            $settings['system_typography'] = $system_typo;
+        }
+
+        // -----------------------------------------------------------
+        // Step 3: Write to kit + regenerate CSS
+        // -----------------------------------------------------------
         update_post_meta( $kit_id, '_elementor_page_settings', $settings );
 
-        // Regenerate kit CSS
         delete_post_meta( $kit_id, '_elementor_css' );
         if ( class_exists( '\Elementor\Core\Files\CSS\Post' ) ) {
             \Elementor\Core\Files\CSS\Post::create( $kit_id )->update();
@@ -1256,6 +1324,128 @@ class WebPrinter_Engine {
 
             if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
                 $element['elements'] = $this->apply_image_overrides( $element['elements'], $images );
+            }
+        }
+        return $elements;
+    }
+
+    // =================================================================
+    // v5.2: STOCK LIBRARY + PLACEHOLDER PURGE
+    // =================================================================
+
+    private function load_stock_manifest() {
+        if ( $this->stock_manifest_loaded ) return;
+        $this->stock_manifest_loaded = true;
+
+        if ( ! defined( 'WP_TEMPLATE_BASE' ) ) return;
+        $url = rtrim( WP_TEMPLATE_BASE, '/' ) . '/_stock/manifest.json';
+        $response = wp_remote_get( $url, [ 'timeout' => 10 ] );
+        if ( is_wp_error( $response ) ) return;
+        if ( wp_remote_retrieve_response_code( $response ) !== 200 ) return;
+
+        $body = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body, true );
+        if ( is_array( $data ) ) {
+            $this->stock_manifest = $data;
+        }
+    }
+
+    private function get_stock_image( string $category = 'generic' ): string {
+        $this->load_stock_manifest();
+        $trade = $this->current_trade ?: 'general';
+
+        $candidates = [
+            [ $trade, $category ],
+            [ $trade, 'generic' ],
+            [ 'general', $category ],
+            [ 'general', 'generic' ],
+        ];
+
+        foreach ( $candidates as [ $t, $c ] ) {
+            if ( ! empty( $this->stock_manifest[$t][$c] ) && is_array( $this->stock_manifest[$t][$c] ) ) {
+                $urls = $this->stock_manifest[$t][$c];
+                return $urls[ array_rand( $urls ) ];
+            }
+        }
+
+        return '';
+    }
+
+    private function inject_stock_into_element( array &$element, string $stock_url ) {
+        if ( empty( $stock_url ) ) return;
+
+        $id  = $this->sideload_image( $stock_url );
+        $img = [
+            'url' => $id ? wp_get_attachment_url( $id ) : esc_url( $stock_url ),
+            'id'  => $id,
+        ];
+
+        $is_image_widget = ( ( $element['elType'] ?? '' ) === 'widget' &&
+                             ( $element['widgetType'] ?? '' ) === 'image' );
+
+        if ( $is_image_widget ) {
+            $element['settings']['image'] = $img;
+        } else {
+            $element['settings']['background_image']      = $img;
+            $element['settings']['background_background'] = 'classic';
+        }
+    }
+
+    /**
+     * _wp_stock: Inject random stock photo from trade library.
+     * "settings": { "_wp_stock": "action" } → random action shot for current trade.
+     */
+    private function process_stock_images( array $elements ): array {
+        foreach ( $elements as &$element ) {
+            if ( ! is_array( $element ) ) continue;
+
+            if ( isset( $element['settings']['_wp_stock'] ) ) {
+                $category  = sanitize_text_field( $element['settings']['_wp_stock'] );
+                $stock_url = $this->get_stock_image( $category );
+                if ( ! empty( $stock_url ) ) {
+                    $this->inject_stock_into_element( $element, $stock_url );
+                }
+            }
+
+            if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+                $element['elements'] = $this->process_stock_images( $element['elements'] );
+            }
+        }
+        return $elements;
+    }
+
+    /**
+     * Auto-purge: replace ANY remaining unmarked image with random stock.
+     * Skips elements with _wp_img, _wp_stock, or _wp_keep markers.
+     * No template placeholder photos survive.
+     */
+    private function purge_placeholder_images( array $elements ): array {
+        foreach ( $elements as &$element ) {
+            if ( ! is_array( $element ) ) continue;
+
+            $is_marked = isset( $element['settings']['_wp_img'] )
+                      || isset( $element['settings']['_wp_stock'] )
+                      || isset( $element['settings']['_wp_keep'] );
+
+            if ( ! $is_marked ) {
+                $is_image_widget = ( ( $element['elType'] ?? '' ) === 'widget' &&
+                                     ( $element['widgetType'] ?? '' ) === 'image' );
+                $has_bg_image    = ! empty( $element['settings']['background_image']['url'] ?? '' );
+
+                if ( $is_image_widget || $has_bg_image ) {
+                    $stock_url = $this->get_stock_image( 'generic' );
+                    if ( ! empty( $stock_url ) ) {
+                        $this->inject_stock_into_element( $element, $stock_url );
+                    }
+                }
+            }
+
+            if ( isset( $element['settings']['_wp_keep'] ) ) {
+                unset( $element['settings']['_wp_keep'] );
+            }
+
+            if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+                $element['elements'] = $this->purge_placeholder_images( $element['elements'] );
             }
         }
         return $elements;
