@@ -159,15 +159,15 @@ def convert_template(data):
     """Main conversion function. Takes raw Elementor JSON, returns marked version."""
     content = data.get('content', [])
     sections = detect_sections(content)
-
+    
     converted = copy.deepcopy(data)
     converted['metadata'] = converted.get('metadata', {})
     converted['metadata']['_meta_converted'] = 'webprinter-v5.2'
-
+    
     for section in sections:
         idx = section['index']
         stype = section['type']
-
+        
         if stype == 'hero':
             convert_hero(converted['content'][idx])
         elif stype == 'about':
@@ -183,139 +183,8 @@ def convert_template(data):
         else:
             # Auto-purge handles images in unknown sections
             mark_images_stock(converted['content'][idx])
-
-    # Swap Pro / 3rd-party-addon widgets with free equivalents so the
-    # converted kit renders on a vanilla Elementor install.
-    for top in converted.get('content', []):
-        swap_unsupported_widgets(top)
-
+    
     return converted
-
-
-# ─── Pro / addon widget swap pass ────────────────────────────────────────
-# Vanilla Elementor (free) ships these widget types. Anything else falls
-# back to a swap — typically a heading or text-editor — so layout doesn't
-# collapse on getinstabid-style installs without Pro or 3rd-party addons.
-
-FREE_WIDGET_TYPES = {
-    'heading', 'text-editor', 'image', 'button', 'icon', 'icon-box',
-    'icon-list', 'spacer', 'divider', 'google_maps', 'video', 'html',
-    'shortcode', 'text-path', 'progress', 'tabs', 'accordion', 'toggle',
-    'social-icons', 'alert', 'audio', 'menu-anchor', 'sidebar',
-    'theme-site-logo', 'theme-site-title', 'theme-page-title',
-    'theme-post-title', 'theme-post-excerpt', 'theme-post-content',
-    'theme-post-featured-image', 'theme-archive-title',
-    # Counter & nested-carousel: free in current Elementor (≥3.20)
-    'counter', 'nested-carousel', 'rating', 'testimonial',
-}
-
-# Map unsupported widget types → (target_free_type, settings_transformer)
-# transformer takes (old_settings) and returns new_settings dict.
-
-def _swap_to_heading(s):
-    title = (s.get('heading_dynamic') or s.get('headline_dynamic_text') or [{}])
-    if isinstance(title, list) and title:
-        first = title[0]
-        title_text = first.get('text') if isinstance(first, dict) else str(first)
-    else:
-        title_text = ''
-    title_text = (
-        s.get('title') or s.get('heading') or s.get('text')
-        or s.get('header_size_text') or title_text or '{{tagline}}'
-    )
-    out = {'title': title_text, 'header_size': s.get('header_size', 'h2')}
-    if s.get('align'): out['align'] = s['align']
-    if s.get('title_color'): out['title_color'] = s['title_color']
-    return out
-
-def _swap_to_text_editor(s):
-    body = s.get('editor') or s.get('text') or s.get('description') or s.get('content', '')
-    if not body:
-        body = '<p>{{about_short}}</p>'
-    return {'editor': body}
-
-def _swap_to_button(s):
-    return {
-        'text': s.get('text') or s.get('button_text') or '{{cta.primary_text}}',
-        'link': s.get('link', {'url': ''}),
-    }
-
-def _swap_to_shortcode_stub(s):
-    # Free Elementor has a `shortcode` widget; emit an empty shortcode that
-    # renders nothing but keeps the layout slot. Editors can drop a real
-    # shortcode (e.g. CF7, HFE nav) in post-deploy.
-    return {'shortcode': s.get('shortcode', '')}
-
-WIDGET_SWAPS = {
-    'animated-headline': ('heading', _swap_to_heading),
-    'form': ('shortcode', _swap_to_shortcode_stub),
-    'nav-menu': ('shortcode', _swap_to_shortcode_stub),
-    'posts': ('text-editor', _swap_to_text_editor),
-    'portfolio': ('text-editor', _swap_to_text_editor),
-    'slides': ('image', lambda s: {'image': {'url': '', 'id': 0}, '_wp_stock': 'hero'}),
-    'gallery': ('text-editor', _swap_to_text_editor),
-    'price-list': ('text-editor', _swap_to_text_editor),
-    'price-table': ('text-editor', _swap_to_text_editor),
-    'flip-box': ('icon-box', lambda s: {
-        'title_text': s.get('title_text_a') or s.get('title') or '',
-        'description_text': s.get('description_text_a') or s.get('description') or '',
-    }),
-    'call-to-action': ('text-editor', _swap_to_text_editor),
-    'reviews': ('text-editor', _swap_to_text_editor),
-    'testimonial-carousel': ('testimonial', lambda s: s),
-    'media-carousel': ('nested-carousel', lambda s: s),
-    'image-carousel': ('nested-carousel', lambda s: s),
-    'lottie': ('image', lambda s: {'image': {'url': '', 'id': 0}, '_wp_stock': 'generic'}),
-    'countdown': ('heading', _swap_to_heading),
-    'hotspot': ('image', lambda s: {'image': {'url': '', 'id': 0}, '_wp_stock': 'generic'}),
-    # 3rd-party addon prefixes (Merkulove `mdp-*`, Qi `qi_*`, ThemePalace `tp-*`)
-    # Handled dynamically in swap_unsupported_widgets.
-}
-
-ADDON_PREFIXES = ('mdp-', 'qi_', 'tp-', 'eael-', 'wpr-', 'jet-', 'crocoblock-')
-
-def _addon_default_swap(wtype, s):
-    """Pick a sensible free swap for unknown 3rd-party addon widgets."""
-    name = wtype.lower()
-    if 'button' in name or 'btn' in name:
-        return ('button', _swap_to_button(s))
-    if 'menu' in name or 'nav' in name or 'crumb' in name:
-        return ('shortcode', _swap_to_shortcode_stub(s))
-    if 'list' in name or 'team' in name or 'member' in name or 'showcase' in name:
-        return ('icon-box', {
-            'title_text': s.get('title') or s.get('name') or '',
-            'description_text': s.get('description') or s.get('text') or '',
-        })
-    if 'image' in name or 'gallery' in name or 'media' in name or 'photo' in name:
-        return ('image', {'image': {'url': '', 'id': 0}, '_wp_stock': 'generic'})
-    if 'heading' in name or 'title' in name or 'header' in name:
-        return ('heading', _swap_to_heading(s))
-    return ('text-editor', _swap_to_text_editor(s))
-
-
-def swap_unsupported_widgets(el):
-    """Recursively rewrite widgets whose types aren't in vanilla Elementor."""
-    if not isinstance(el, dict):
-        return
-    wtype = el.get('widgetType', '')
-    if wtype and wtype not in FREE_WIDGET_TYPES:
-        s = el.get('settings', {}) or {}
-        # Preserve any WebPrinter markers from the original settings.
-        markers = {k: v for k, v in s.items() if k.startswith('_wp_')}
-        if wtype in WIDGET_SWAPS:
-            new_type, transformer = WIDGET_SWAPS[wtype]
-            el['widgetType'] = new_type
-            new_s = transformer(s)
-            new_s.update(markers)
-            el['settings'] = new_s
-        elif any(wtype.startswith(p) for p in ADDON_PREFIXES):
-            new_type, new_settings = _addon_default_swap(wtype, s)
-            el['widgetType'] = new_type
-            new_settings.update(markers)
-            el['settings'] = new_settings
-        # Other unknown widgets left alone — may be from active plugins on the target.
-    for child in el.get('elements', []) or []:
-        swap_unsupported_widgets(child)
 
 
 def convert_hero(el):
