@@ -107,7 +107,7 @@
                 "animation_type": "blinds",
                 "marker": "curly",
                 "before_text": "",
-                "highlighted_text": "Trusted Globally",
+                "highlighted_text": "{{business_name}}",
                 "rotating_text": "Contacts\nContacts\nContacts\n",
                 "tag": "h1",
                 "words_color": "#16286500",
@@ -499,7 +499,7 @@
                       "id": "4e49e8d",
                       "settings": {
                         "content_width": "full",
-                        "header_text": "+123 456 78 90",
+                        "header_text": "{{contact.phone}}",
                         "heading_link": {
                           "url": "#",
                           "is_external": false,
@@ -1661,7 +1661,7 @@
                       "value": "fas fa-phone-alt",
                       "library": "fa-solid"
                     },
-                    "title_text": "+123 456 78 90",
+                    "title_text": "{{contact.phone}}",
                     "description_text": "",
                     "link": {
                       "url": "#",
@@ -1775,7 +1775,7 @@
                       "value": "fas fa-map-marker-alt",
                       "library": "fa-solid"
                     },
-                    "title_text": "123 Innovation Drive TechCity, NY 10001 USA",
+                    "title_text": "{{contact.address.city}}, {{contact.address.state}}",
                     "description_text": "",
                     "link": {
                       "url": "#",

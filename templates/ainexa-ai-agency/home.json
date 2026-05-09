@@ -625,8 +625,8 @@
                 "animation_type": "drop-in",
                 "marker": "curly",
                 "before_text": "",
-                "highlighted_text": "Trusted Globally",
-                "rotating_text": "ARTIFICIAL INTELLIGENCE\nARTIFICIAL INTELLIGENCE\nARTIFICIAL INTELLIGENCE\nARTIFICIAL INTELLIGENCE",
+                "highlighted_text": "{{business_name}}",
+                "rotating_text": "{{tagline}}",
                 "tag": "h1",
                 "words_color": "#00060B",
                 "words_typography_typography": "custom",
@@ -1933,7 +1933,7 @@
                           "id": "22e821bf",
                           "settings": {
                             "content_width": "full",
-                            "title": "Data Analytics",
+                            "title": "{{services._item.name}}",
                             "header_size": "h4",
                             "_element_width": "initial",
                             "_element_width_mobile": "initial",
@@ -2140,7 +2140,7 @@
                           "id": "7965a070",
                           "settings": {
                             "content_width": "full",
-                            "title": "Automation",
+                            "title": "{{services._item.name}}",
                             "header_size": "h4",
                             "_element_width": "initial",
                             "_element_width_mobile": "initial",
@@ -2757,7 +2757,7 @@
                       "id": "7acc8dbd",
                       "settings": {
                         "content_width": "full",
-                        "editor": "Data Processed Daily",
+                        "editor": "",
                         "align": "right",
                         "align_tablet": "right",
                         "align_mobile": "left",
@@ -5883,7 +5883,7 @@
                   "settings": {
                     "ending_number": 3.5,
                     "suffix": "K+",
-                    "title": "Happy Users And Counting",
+                    "title": "",
                     "title_position": "after",
                     "title_horizontal_alignment": "end",
                     "title_gap": {
@@ -6275,8 +6275,8 @@
                 "animation_type": "blinds",
                 "marker": "curly",
                 "before_text": "",
-                "highlighted_text": "Trusted Globally",
-                "rotating_text": "Trusted Globally\nTrusted Globally\nTrusted Globally\nTrusted Globally",
+                "highlighted_text": "{{business_name}}",
+                "rotating_text": "{{tagline}}",
                 "tag": "h1",
                 "words_color": "#00060B",
                 "words_typography_typography": "custom",
@@ -6904,7 +6904,7 @@
                           "value": "fas fa-phone-alt",
                           "library": "fa-solid"
                         },
-                        "title_text": "+123 456 78 90",
+                        "title_text": "{{contact.phone}}",
                         "description_text": "",
                         "link": {
                           "url": "#",
@@ -7016,7 +7016,7 @@
                           "value": "fas fa-map-marker-alt",
                           "library": "fa-solid"
                         },
-                        "title_text": "123 Innovation Drive TechCity, NY 10001 USA",
+                        "title_text": "{{contact.address.city}}, {{contact.address.state}}",
                         "description_text": "",
                         "link": {
                           "url": "#",

@@ -100,7 +100,7 @@
                 "animation_type": "blinds",
                 "marker": "curly",
                 "before_text": "",
-                "highlighted_text": "Trusted Globally",
+                "highlighted_text": "{{business_name}}",
                 "rotating_text": "Pricing\nPricing\nPricing\n",
                 "tag": "h1",
                 "words_color": "#16286500",
