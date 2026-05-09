@@ -1870,11 +1870,8 @@
                           "id": "5249897d",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Image-testimonial-Imbo.png",
-                              "id": 488,
-                              "size": "",
-                              "alt": "",
-                              "source": "library"
+                              "url": "",
+                              "id": 0
                             },
                             "width": {
                               "unit": "%",
@@ -1883,7 +1880,8 @@
                             },
                             "pa_condition_repeater": [],
                             "premium_tooltip_text": "Hi, I'm a global tooltip.",
-                            "premium_tooltip_position": "top,bottom"
+                            "premium_tooltip_position": "top,bottom",
+                            "_wp_stock": "team"
                           },
                           "elements": [],
                           "isInner": false,

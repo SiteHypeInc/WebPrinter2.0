@@ -779,27 +779,9 @@
                   },
                   "elements": [
                     {
-                      "id": "3cce5655",
-                      "settings": {
-                        "title": "/ Imbo Company     ",
-                        "pa_condition_repeater": [],
-                        "premium_tooltip_text": "Hi, I'm a global tooltip.",
-                        "premium_tooltip_position": "top,bottom",
-                        "__globals__": {
-                          "title_color": "globals/colors?id=secondary",
-                          "typography_typography": "globals/typography?id=49656ac"
-                        },
-                        "align_tablet": "center"
-                      },
-                      "elements": [],
-                      "isInner": false,
-                      "widgetType": "heading",
-                      "elType": "widget"
-                    },
-                    {
                       "id": "59dfc699",
                       "settings": {
-                        "editor": "<p>Ready Creative Solutions developed with futuristic precision</p>",
+                        "editor": "<p>{{tagline}}</p>",
                         "paragraph_spacing": {
                           "unit": "px",
                           "size": 0,
@@ -864,7 +846,7 @@
                     {
                       "id": "48d65f23",
                       "settings": {
-                        "title": "Delivered",
+                        "title": "{{business_name}}",
                         "title_color": "#FFFFFF",
                         "pa_condition_repeater": [],
                         "premium_tooltip_text": "Hi, I'm a global tooltip.",
@@ -7427,11 +7409,8 @@
                           "id": "2dde25c3",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Image-testimonial-Imbo.png",
-                              "id": 488,
-                              "size": "",
-                              "alt": "",
-                              "source": "library"
+                              "url": "",
+                              "id": 0
                             },
                             "width": {
                               "unit": "%",
@@ -7440,7 +7419,8 @@
                             },
                             "pa_condition_repeater": [],
                             "premium_tooltip_text": "Hi, I'm a global tooltip.",
-                            "premium_tooltip_position": "top,bottom"
+                            "premium_tooltip_position": "top,bottom",
+                            "_wp_stock": "team"
                           },
                           "elements": [],
                           "isInner": false,
