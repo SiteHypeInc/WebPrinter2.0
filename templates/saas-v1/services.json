@@ -1106,13 +1106,8 @@
                         {
                           "id": "6585d008",
                           "settings": {
-                            "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Icon-Feeatures-Imbo-3.png",
-                              "id": 382,
-                              "size": "",
-                              "alt": "",
-                              "source": "library"
-                            },
+                            "image": { "url": "", "id": 0, "size": "", "alt": "", "source": "library" },
+                            "_wp_keep": true,
                             "align": "left",
                             "width": {
                               "unit": "%",

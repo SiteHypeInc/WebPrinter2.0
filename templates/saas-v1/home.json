@@ -16,19 +16,20 @@
         "flex_direction": "column",
         "background_background": "classic",
         "background_image": {
-          "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Blur-Effect-Imbo-1.png",
-          "id": 234,
+          "url": "",
+          "id": 0,
           "size": "",
           "alt": "",
           "source": "library"
         },
+        "_wp_keep": true,
         "background_position": "top center",
         "background_repeat": "no-repeat",
         "background_size": "contain",
         "background_overlay_background": "classic",
         "background_overlay_image": {
-          "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/BG-Black-Imbo.png",
-          "id": 288,
+          "url": "",
+          "id": 0,
           "size": "",
           "alt": "",
           "source": "library"
@@ -169,7 +170,7 @@
                     {
                       "id": "b3ddf8f",
                       "settings": {
-                        "title": "{{tagline}}",
+                        "title": "Trusted by Homeowners Like You",
                         "title_color": "#FFFFFF",
                         "pa_condition_repeater": [],
                         "premium_tooltip_text": "Hi, I'm a global tooltip.",
@@ -617,12 +618,13 @@
                     "flex_justify_content": "space-between",
                     "background_background": "classic",
                     "background_image": {
-                      "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Line-Vector-Hero-Imbo.png",
-                      "id": 293,
+                      "url": "",
+                      "id": 0,
                       "size": "",
                       "alt": "",
                       "source": "library"
                     },
+                    "_wp_keep": true,
                     "background_position": "center center",
                     "background_repeat": "no-repeat",
                     "background_size": "contain",
@@ -701,12 +703,13 @@
                 "background_background": "classic",
                 "background_color_b": "",
                 "background_image": {
-                  "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/BG-Black-Imbo.png",
-                  "id": 288,
+                  "url": "",
+                  "id": 0,
                   "size": "",
                   "alt": "",
                   "source": "library"
                 },
+                "_wp_keep": true,
                 "background_position": "top center",
                 "background_repeat": "no-repeat",
                 "background_size": "cover",
@@ -1120,7 +1123,7 @@
                         {
                           "id": "4953969d",
                           "settings": {
-                            "title": "{{tagline}}",
+                            "title": "About {{business_name}}",
                             "title_color": "#FFFFFF",
                             "pa_condition_repeater": [],
                             "premium_tooltip_text": "Hi, I'm a global tooltip.",
@@ -1426,7 +1429,7 @@
                         {
                           "id": "636b7c93",
                           "settings": {
-                            "title": "{{tagline}}",
+                            "title": "Why Homeowners Choose Us",
                             "title_color": "#FFFFFF",
                             "pa_condition_repeater": [],
                             "premium_tooltip_text": "Hi, I'm a global tooltip.",
@@ -2839,7 +2842,7 @@
                     {
                       "id": "5a5747ed",
                       "settings": {
-                        "title": "{{tagline}}",
+                        "title": "What We Offer",
                         "title_color": "#FFFFFF",
                         "pa_condition_repeater": [],
                         "premium_tooltip_text": "Hi, I'm a global tooltip.",
@@ -3062,12 +3065,13 @@
                           "id": "7ebcb43e",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Icon-Feeatures-Imbo-4.png",
-                              "id": 383,
+                              "url": "",
+                              "id": 0,
                               "size": "",
                               "alt": "",
                               "source": "library"
                             },
+                            "_wp_keep": true,
                             "align": "left",
                             "width": {
                               "unit": "%",
@@ -3309,12 +3313,13 @@
                           "id": "2789c2e3",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Icon-Feeatures-Imbo-1.png",
-                              "id": 380,
+                              "url": "",
+                              "id": 0,
                               "size": "",
                               "alt": "",
                               "source": "library"
                             },
+                            "_wp_keep": true,
                             "align": "left",
                             "width": {
                               "unit": "%",
@@ -3547,12 +3552,13 @@
                           "id": "1d26903b",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Icon-Feeatures-Imbo-2.png",
-                              "id": 381,
+                              "url": "",
+                              "id": 0,
                               "size": "",
                               "alt": "",
                               "source": "library"
                             },
+                            "_wp_keep": true,
                             "align": "left",
                             "width": {
                               "unit": "%",
@@ -3776,12 +3782,13 @@
                           "id": "6874aac3",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Icon-Feeatures-Imbo-3.png",
-                              "id": 382,
+                              "url": "",
+                              "id": 0,
                               "size": "",
                               "alt": "",
                               "source": "library"
                             },
+                            "_wp_keep": true,
                             "align": "left",
                             "width": {
                               "unit": "%",
@@ -6821,7 +6828,8 @@
         },
         "pa_condition_repeater": [],
         "premium_tooltip_text": "Hi, I'm a global tooltip.",
-        "premium_tooltip_position": "top,bottom"
+        "premium_tooltip_position": "top,bottom",
+        "_wp_if": "testimonials"
       },
       "elements": [
         {
