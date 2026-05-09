@@ -7809,7 +7809,7 @@
               "id": "23f250d1",
               "settings": {
                 "content_width": "full",
-                "editor": "\u00a9 Merkulove 2024 \u2013 All Rights Reserved",
+                "editor": "\u00a9 {{business_name}} \u2013 All Rights Reserved",
                 "_margin": {
                   "unit": "px",
                   "top": "0",
