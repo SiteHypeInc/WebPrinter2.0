@@ -1,102 +1,89 @@
 {
   "_format_version": "1.0",
-
   "general": {
     "generic": [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80",
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/general/generic/general-generic-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/general/generic/general-generic-02.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/general/generic/general-generic-03.jpg"
     ]
   },
-
   "hvac": {
     "hero": [
-      "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1920&q=80",
-      "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/hero/hvac-hero-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/hero/hvac-hero-02.jpg"
     ],
     "action": [
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1200&q=80",
-      "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/action/hvac-action-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/action/hvac-action-02.jpg"
     ],
     "team": [
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/team/hvac-team-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/team/hvac-team-02.jpg"
     ],
     "generic": [
-      "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&q=80",
-      "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80",
-      "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/generic/hvac-generic-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/generic/hvac-generic-02.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/hvac/generic/hvac-generic-03.jpg"
     ]
   },
-
   "roofing": {
     "hero": [
-      "https://images.unsplash.com/photo-1632759145351-1d592919f522?w=1920&q=80",
-      "https://images.unsplash.com/photo-1635424710928-0544e8c1e241?w=1920&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/roofing/hero/roofing-hero-01.jpg"
     ],
     "action": [
-      "https://images.unsplash.com/photo-1607400201889-565b1ee75f8e?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/roofing/action/roofing-action-01.jpg"
     ],
     "generic": [
-      "https://images.unsplash.com/photo-1632759145351-1d592919f522?w=1200&q=80",
-      "https://images.unsplash.com/photo-1635424710928-0544e8c1e241?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/roofing/generic/roofing-generic-01.jpg"
     ]
   },
-
   "plumbing": {
     "hero": [
-      "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=1920&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/plumbing/hero/plumbing-hero-01.jpg"
     ],
     "action": [
-      "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/plumbing/action/plumbing-action-01.jpg"
     ],
     "generic": [
-      "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=1200&q=80",
-      "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/plumbing/generic/plumbing-generic-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/plumbing/generic/plumbing-generic-02.jpg"
     ]
   },
-
   "electrical": {
     "generic": [
-      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/electrical/generic/electrical-generic-01.jpg"
     ]
   },
-
   "painting": {
     "generic": [
-      "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&q=80",
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/painting/generic/painting-generic-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/painting/generic/painting-generic-02.jpg"
     ]
   },
-
   "flooring": {
     "generic": [
-      "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/flooring/generic/flooring-generic-01.jpg"
     ]
   },
-
   "siding": {
     "generic": [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/siding/generic/siding-generic-01.jpg"
     ]
   },
-
   "drywall": {
     "generic": [
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/drywall/generic/drywall-generic-01.jpg"
     ]
   },
-
   "other": {
     "hero": [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80",
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1920&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/other/hero/other-hero-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/other/hero/other-hero-02.jpg"
     ],
     "generic": [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80",
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/other/generic/other-generic-01.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/other/generic/other-generic-02.jpg",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/other/generic/other-generic-03.jpg"
     ]
   }
 }
