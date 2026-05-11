@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-11
-**Updated by:** WePro (post-leak fix + services tokenization)
+**Updated by:** WePro (vision-chain proven; Servicesy + lorem fixes shipped)
 
 ---
 
@@ -24,7 +24,7 @@
 | Site | Purpose | Plugin | Status |
 |------|---------|--------|--------|
 | webprinter-test.hostingersite.com | Pasterkamp HVAC test | v5.2 | Deployed, working |
-| getinstabid.pro | InstaBid SaaS test | v5.2 | Deployed, QA score 47/100 |
+| getinstabid.pro | InstaBid SaaS test | v5.2 | Deployed, QA score 52/100 (was 47, +5 after Servicesy + lorem fixes) |
 
 ## Deploy auth
 
@@ -66,19 +66,26 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 ## Known issues (current)
 
 1. ~~**ainexa template stock-image leak**~~ — RESOLVED 2026-05-11 (commit 5eee1ac). 39 ainexa.templatekit.co URLs across all 5 page templates replaced with self-hosted assets under `templates/ainexa-ai-agency/assets/`, served via raw.githubusercontent.com. Verified via deploy → 0 leaks on rendered home/about/services.
-2. **footer_contact_missing** — pre-flight check fails on payloads with empty `contact.phone`. Email + address alone don't satisfy it. Either supply a phone (or placeholder) in the payload, or relax the check to OR semantics across phone/email.
+2. **footer_contact_missing** — pre-flight check looks at `home.slice(-6000)` for phone/email/city. With `phone=""`, only the email regex and `Portland` literal can clear it. With `qa_skip_failures:["footer_contact_missing"]` payload-bypass the chain runs end-to-end; permanent fix is OR semantics across phone/email/city plus a longer slice (HFE footer renders mid-document, not at tail).
 3. **header.json missing** — AiNexa kit has no HFE header template. Hello Elementor default header renders instead (oversized logo). kit.json has CSS to hide it.
 4. **Image IDs returning 0** — stock manifest sideload depends on URLs being reachable from WordPress host. GitHub-raw mirrored images work. Unsplash fails on Hostinger.
-5. **n8n / FireCrawl → Hostinger network blocked on BOTH properties** — DigitalOcean → both `getinstabid.pro` and `instabid.pro` was null-routed via hCDN bot challenge (`hcdn-cgi/jschallenge`). CDN toggled OFF in hPanel 2026-05-11 — propagation may lag; FireCrawl outbound IPs may need separate whitelist if challenges persist. Symptom: `webprinter-5-1` webhook returns `{"data":"<!DOCTYPE html>...Checking your browser..."}` wrapped FireCrawl response, and `qa-test-live` returns instantly with stale-looking preflight failures even when the rendered page is correct (suggests FireCrawl proxy is seeing the challenge HTML in place of the real page).
+5. **n8n / FireCrawl → Hostinger network blocked on BOTH properties** — RESOLVED 2026-05-11. CDN toggled OFF in hPanel for both `getinstabid.pro` and `instabid.pro`. End-to-end QA via `qa-test-live` now returns clean preflight + vision results from getinstabid.pro.
 6. **Sibling Imbo URL leak in saas-v1** — RESOLVED 2026-05-11 (commit 85c3d28). 5 `nva.nirmanavisual.com/imbo/...` URLs replaced; one self-hosted asset added at `templates/saas-v1/assets/Image-BG-Imbo-1.png`.
+7. ~~**"Servicesy from {{business_name}}" typo + 3 lorem-ipsum blurbs in AiNexa templates**~~ — RESOLVED 2026-05-11 (commit a5f88b7). Typo fixed in `services.json:333`; `Excepteur sint occaecat…` replaced with `{{about_short}}` in `services.json` (2 occurrences) and `about.json` (1 occurrence). Verified clean on live `https://getinstabid.pro/services/`.
+8. **FireCrawl /scrape cache makes vision scores stale** — `api.firecrawl.dev/v1/scrape` caches results by URL; back-to-back QA fires return identical screenshots even after fresh deploys. Verified by patching all 5 call sites (Pre-flight HTML + 4 Capture nodes) with `maxAge: 0` and re-firing — Servicesy and lorem-ipsum disappeared from vision findings, score moved 47→52. Patch was reverted to backup parity after the test. Permanent fix: add `maxAge: 0` (or a short TTL) to the body in `QA — Pre-flight HTML` (`JSON.stringify({ url: target, formats: ['html'], timeout: 20000, maxAge: 0 })`) and the four capture nodes' raw body opts.
+9. **LiteSpeed cache not flushed by engine on deploy** — `webprinter-engine-v5.2-gold.php` calls `Breeze_PurgeCache::breeze_cache_flush()` and `$this->clear_elementor_cache()`, but getinstabid.pro runs LiteSpeed Cache. Direct local curl after deploy *does* show fresh content (LiteSpeed auto-purges on `_elementor_data` save), but cache-warmth across FireCrawl scrape paths is unreliable. Watch item — may need `do_action('litespeed_purge_all')` added to engine post-deploy hook. Requires plugin change → John's approval.
+10. **HFE footer + Hello Elementor `<footer id="colophon">` co-existence** — HFE injects footer content correctly (4× `hello@instabid.pro` + 4× `Portland` render in DOM after deploy), but Hello Elementor's empty `<footer id="colophon">` placeholder appears below the HFE footer. Vision rubric repeatedly reports "Footer Missing" — likely because the bottom of viewport shows the empty colophon, and dark-on-dark colors (footer gradient `#07142D` on body `#00060B`) make HFE footer hard to distinguish. Mechanism is intact (see `webprinter-engine-v5.2-gold.php:1206-1255` — engine creates `elementor-hf` post w/ `ehf_template_type=type_footer` + `ehf_target_include_locations=basic-global`). Fix candidates: (a) hide `#colophon` via `kit.json.custom_css` the same way `#site-header` is hidden, (b) reverse the visual mismatch by increasing footer contrast.
 
 ## NEXT ACTIONS (in priority order)
 
 1. ~~**Fix ainexa template stock-image leak**~~ — DONE (commits 5eee1ac, 85c3d28).
-2. **Exercise vision scoring end-to-end** — pre-flight now passes `services` count (commit 2475749 added `_wp_repeat: "services"` to the AiNexa services grid + tokenized `{{services._item.name}}` and `{{services._item.description}}`). Remaining blockers: (a) supply non-empty `contact.phone` in payload to clear `footer_contact_missing`, (b) confirm FireCrawl is no longer being challenged by hCDN (re-fire `qa-test-live` after dashboard propagation).
-3. **Template polish for 80+ score** — fix counter placeholders (0 TB), hide empty testimonials (consider `_wp_if: "testimonials"` since AiNexa testimonials aren't tokenized for `_wp_repeat` either), resolve duplicate footer. Service-card icons currently repeat the same `AI-Icon-23-1.png` 6× because we kept ONE canonical card; consider rotating from a pool or extracting icons to a payload field.
-4. **Wire Vision analysis to front of pipeline** — conditional gate after Firecrawl, only fires when scrape is thin.
-5. **Test with instabid.pro site** — Run the full pipeline end-to-end (blocked on issue #5 propagation).
+2. ~~**Exercise vision scoring end-to-end**~~ — DONE. Vision chain proven 2026-05-11 via `qa-test-live` with `qa_skip_failures:["footer_contact_missing"]` bypass. Score 47 → 52 after Servicesy + lorem fixes (commit a5f88b7). 12 issues remain — see vision report.
+3. **Template polish for 80+ score** — remaining critical/high issues from latest vision pass: (a) hero image fills only half the desktop hero, missing on mobile (huge empty black gap) — likely an `_wp_img` marker missing on the hero container or hero image asset not sideloaded for the `hero` category; (b) service-card thumbnails show car-dashboard photos for Roofing/HVAC/Painting — wrong industry context — need `_wp_stock` markers per service-card tied to the trade (or per-service `image_url` in payload); (c) mobile hero headline overflows horizontally + CTA overlaps counter; (d) no testimonials/social proof anywhere (kit has the section but it's not tokenized for `_wp_repeat:testimonials`); (e) counter values lack labels ("3x" with no context).
+4. **FireCrawl /scrape cache fix** — add `maxAge: 0` to the 5 FireCrawl call bodies (1 in Pre-flight HTML, 4 in capture nodes). Without this, vision scores reflect the cached state from the *previous* deploy, not the current one. Patch was proven in this session and reverted; needs to be made permanent.
+5. **Pre-flight footer check semantics** — `footer_contact_missing` fires even when the rendered footer contains the contact info, because the check only looks at `home.slice(-6000)` and HFE's footer renders mid-document followed by Hello Elementor's empty `<footer id="colophon">`. Fix candidates: lengthen slice, OR semantics across phone/email/city, OR scan within the actual `<footer>` element.
+6. **LiteSpeed cache flush in engine** — engine uses Breeze; site is LiteSpeed. Watch item; may need `do_action('litespeed_purge_all')` added post-deploy. Plugin change → requires John's explicit approval.
+7. **Wire Vision analysis to front of pipeline** — conditional gate after Firecrawl, only fires when scrape is thin.
+8. **Test with instabid.pro site** — Run the full pipeline end-to-end (CDN now off on instabid.pro per issue #5; should be unblocked).
 
 ## DO NOT
 
