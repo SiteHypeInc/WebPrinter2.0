@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-11
-**Updated by:** WePro (Wake 5: saas stock manifest replaced with real SaaS imagery; score still 54 — layout + per-service image plumbing now dominate)
+**Updated by:** WePro (Wake 6: Vision Mode 1 — Design DNA Extraction — wired into deploy pipeline; verified end-to-end on linear.app)
 
 ---
 
@@ -17,6 +17,7 @@
 | Auto-fix loop | ✅ BUILT | 2 iterations max, then ESCALATE to review queue |
 | Outreach gate | ✅ LIVE | Blocked unless QA verdict = PASS |
 | Pexels stock node | ✅ LIVE | In deploy pipeline, 2 queries per deploy |
+| Vision Mode 1 (Design DNA) | ✅ LIVE | Source Screenshot → Vision DNA → Merge — auto-selects template + brand colors |
 | Templates | ✅ DEPLOYED | saas-v1 (Imbo) + ainexa-ai-agency in repo |
 
 ## Sites
@@ -82,7 +83,9 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 
 13. **Hero layout void on desktop + mobile overflow** — Vision still flags hero as "critical" because the kit template puts the hero image below the headline with a "massive empty black gap" above the fold; on mobile the headline overflows horizontally and the hero image area is blank. This is a kit-level CSS/sizing issue, not asset quality. Fix candidates: reduce hero section `min-height` (likely on `_kit_default_color` or section settings in `ainexa-ai-agency/home.json`), or set hero image as section background with `object-fit:cover`. The marquee headline `min-width` should be `100vw` not auto. Requires editing `home.json` section settings.
 
-14. **HFE footer + Hello Elementor `<footer id="colophon">` co-existence** — HFE injects footer content correctly (4× `hello@instabid.pro` + 4× `Portland` render in DOM after deploy), but Hello Elementor's empty `<footer id="colophon">` placeholder appears below the HFE footer. Vision rubric repeatedly reports "Footer Missing" — likely because the bottom of viewport shows the empty colophon, and dark-on-dark colors (footer gradient `#07142D` on body `#00060B`) make HFE footer hard to distinguish. Mechanism is intact (see `webprinter-engine-v5.2-gold.php:1206-1255` — engine creates `elementor-hf` post w/ `ehf_template_type=type_footer` + `ehf_target_include_locations=basic-global`). Fix candidates: (a) hide `#colophon` via `kit.json.custom_css` the same way `#site-header` is hidden, (b) reverse the visual mismatch by increasing footer contrast.
+14. **Vision Mode 1 wired into deploy pipeline (Wake 6)** — workflow `A6naBMqLH3eRDzjx` chain is now: `Webhook → FireCrawl → Claude Normalize → Pexels → Source Screenshot (FireCrawl) → Vision — Design DNA (OpenRouter sonnet-4.6) → Merge Design DNA (Code) → Deploy`. Merge node writes `template_override`, `brand_mode`, `brand_colors`, `design_profile`, and overrides `industry` from vision's `content_observations.industry_guess`. Deploy body builder honors `p.template_override` (whitelist: saas-v1, ainexa-ai-agency, bold-v2, Green-v2, Authority-v2, premium-v2) and passes through `brand_mode`/`brand_colors`/`design_profile`. End-to-end verified 2026-05-11 via `linear.app`: vision returned `recommended_template: ainexa-ai-agency`, `brand_colors.accent: #5e6ad2` (Linear's actual purple), `vibe: tech-forward`, `quality_score: 96`. All 8 pipeline stages ran clean — only Deploy timed out on `getinstabid.pro` (same hCDN IP block per Issue #5; n8n IPs not yet whitelisted there). Spec: `Vision.md` (committed 7903eac).
+
+15. **HFE footer + Hello Elementor `<footer id="colophon">` co-existence** — HFE injects footer content correctly (4× `hello@instabid.pro` + 4× `Portland` render in DOM after deploy), but Hello Elementor's empty `<footer id="colophon">` placeholder appears below the HFE footer. Vision rubric repeatedly reports "Footer Missing" — likely because the bottom of viewport shows the empty colophon, and dark-on-dark colors (footer gradient `#07142D` on body `#00060B`) make HFE footer hard to distinguish. Mechanism is intact (see `webprinter-engine-v5.2-gold.php:1206-1255` — engine creates `elementor-hf` post w/ `ehf_template_type=type_footer` + `ehf_target_include_locations=basic-global`). Fix candidates: (a) hide `#colophon` via `kit.json.custom_css` the same way `#site-header` is hidden, (b) reverse the visual mismatch by increasing footer contrast.
 
 ## NEXT ACTIONS (in priority order)
 
@@ -93,12 +96,12 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 5. **Template polish for 70+/80+ score** — remaining blockers from 54 pass (in priority):
    (a) Hero layout (Issue #13): empty black void above the hero image on desktop, image below fold; mobile hero overflows. Fix in `templates/ainexa-ai-agency/home.json` hero section settings — reduce min-height, set image as background, fix marquee `min-width`.
    (b) Per-service `image.url` ignored (Issue #11): all service cards render the same asset because `purge_placeholder_images` broadcasts one stock pull. Plugin change → requires John.
-   (c) Footer/contact (Issue #14): HFE footer renders but Hello colophon collision + dark-on-dark contrast keeps "Footer Missing" lit on vision. Hide `#colophon` via `kit.json.custom_css`.
+   (c) Footer/contact (Issue #15): HFE footer renders but Hello colophon collision + dark-on-dark contrast keeps "Footer Missing" lit on vision. Hide `#colophon` via `kit.json.custom_css`.
    (d) Counter values lack labels ("3x" with no context).
    (e) Testimonials section hides correctly when `testimonials:[]` (Wake 4) but vision still flags "no social proof" — consider always-visible logos/trust-badges row, or seed demo testimonials.
 5. **Pre-flight footer check semantics** — `footer_contact_missing` fires even when the rendered footer contains the contact info, because the check only looks at `home.slice(-6000)` and HFE's footer renders mid-document followed by Hello Elementor's empty `<footer id="colophon">`. Fix candidates: lengthen slice, OR semantics across phone/email/city, OR scan within the actual `<footer>` element.
 6. **LiteSpeed cache flush in engine** — engine uses Breeze; site is LiteSpeed. Watch item; may need `do_action('litespeed_purge_all')` added post-deploy. Plugin change → requires John's explicit approval.
-7. **Wire Vision analysis to front of pipeline** — conditional gate after Firecrawl, only fires when scrape is thin.
+7. ~~**Wire Vision analysis to front of pipeline**~~ — DONE (Wake 6). Mode 1 (Design DNA) now runs between Pexels and Deploy. See Issue #14. Future enhancement: two-version deploys (`brand_mode: template` vs `brand_mode: client`) driven off `recommended_template.brand_mode_reasoning`.
 8. **Test with instabid.pro site** — Wake 4 retest: `curl POST https://n8n.instabid.pro/webhook/webprinter-5-1 -d '{"url":"https://instabid.pro","brand_mode":"template"}'` still returns Hostinger hCDN bot-challenge HTML (`/hcdn-cgi/jschallenge`) wrapped inside FireCrawl's response. CDN may have been re-enabled on instabid.pro, or hCDN is still walling FireCrawl's IPs. Re-toggle hCDN OFF in hPanel for instabid.pro and re-fire.
 
 ## DO NOT
