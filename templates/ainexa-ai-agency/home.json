@@ -3890,7 +3890,8 @@
           "bottom": "60",
           "left": "0",
           "isLinked": false
-        }
+        },
+        "_wp_if": "testimonials"
       },
       "elements": [
         {

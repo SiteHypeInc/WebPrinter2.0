@@ -1541,7 +1541,8 @@
                 "premium_tooltip_text": "Hi, I'm a global tooltip.",
                 "premium_tooltip_position": "top,bottom",
                 "_wp_repeat": "testimonials",
-                "_wp_repeat_max": 8
+                "_wp_repeat_max": 8,
+                "_wp_if": "testimonials"
               },
               "elements": [
                 {
