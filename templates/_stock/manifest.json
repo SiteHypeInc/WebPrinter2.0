@@ -88,19 +88,19 @@
   },
   "saas": {
     "hero": [
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/hero/saas-hero-01.jpg",
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/hero/saas-hero-02.jpg"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/hero/saas-hero-01.jpg?v=20260511",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/hero/saas-hero-02.jpg?v=20260511"
     ],
     "action": [
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/action/saas-action-01.jpg",
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/action/saas-action-02.jpg"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/action/saas-action-01.jpg?v=20260511",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/action/saas-action-02.jpg?v=20260511"
     ],
     "team": [
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/team/saas-team-01.jpg"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/team/saas-team-01.jpg?v=20260511"
     ],
     "generic": [
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-01.jpg",
-      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-02.jpg"
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-01.jpg?v=20260511",
+      "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-02.jpg?v=20260511"
     ]
   }
 }
