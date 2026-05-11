@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-11
-**Updated by:** John + Claude Opus (architecture session)
+**Updated by:** WePro (post-leak fix + services tokenization)
 
 ---
 
@@ -65,19 +65,20 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 
 ## Known issues (current)
 
-1. **ainexa template stock-image leak** — 11 hits of ainexa.templatekit.co image URLs still in /services templates. Deploy isn't replacing these with stock. This is a template fix, not a plugin or QA issue.
-2. **footer_contact_missing** — fires when payload has empty contact fields. Real deploys with real data will pass. Not a bug.
+1. ~~**ainexa template stock-image leak**~~ — RESOLVED 2026-05-11 (commit 5eee1ac). 39 ainexa.templatekit.co URLs across all 5 page templates replaced with self-hosted assets under `templates/ainexa-ai-agency/assets/`, served via raw.githubusercontent.com. Verified via deploy → 0 leaks on rendered home/about/services.
+2. **footer_contact_missing** — pre-flight check fails on payloads with empty `contact.phone`. Email + address alone don't satisfy it. Either supply a phone (or placeholder) in the payload, or relax the check to OR semantics across phone/email.
 3. **header.json missing** — AiNexa kit has no HFE header template. Hello Elementor default header renders instead (oversized logo). kit.json has CSS to hide it.
 4. **Image IDs returning 0** — stock manifest sideload depends on URLs being reachable from WordPress host. GitHub-raw mirrored images work. Unsplash fails on Hostinger.
-5. **n8n → getinstabid.pro network blocked** — DigitalOcean → this specific Hostinger IP is null-routed. FireCrawl proxy workaround is in place. Local curl works fine.
+5. **n8n / FireCrawl → Hostinger network blocked on BOTH properties** — DigitalOcean → both `getinstabid.pro` and `instabid.pro` was null-routed via hCDN bot challenge (`hcdn-cgi/jschallenge`). CDN toggled OFF in hPanel 2026-05-11 — propagation may lag; FireCrawl outbound IPs may need separate whitelist if challenges persist. Symptom: `webprinter-5-1` webhook returns `{"data":"<!DOCTYPE html>...Checking your browser..."}` wrapped FireCrawl response, and `qa-test-live` returns instantly with stale-looking preflight failures even when the rendered page is correct (suggests FireCrawl proxy is seeing the challenge HTML in place of the real page).
+6. **Sibling Imbo URL leak in saas-v1** — RESOLVED 2026-05-11 (commit 85c3d28). 5 `nva.nirmanavisual.com/imbo/...` URLs replaced; one self-hosted asset added at `templates/saas-v1/assets/Image-BG-Imbo-1.png`.
 
 ## NEXT ACTIONS (in priority order)
 
-1. **Fix ainexa template stock-image leak** — replace ainexa.templatekit.co URLs in the converted templates with _wp_stock markers or empty them so auto-purge handles them. This unblocks the vision scoring test.
-2. **Exercise vision scoring end-to-end** — needs a site that clears pre-flight first (action #1 fixes this). Then fire qa-test-live and confirm vision scores + auto-fix loop works.
-3. **Template polish for 80+ score** — fix counter placeholders (0 TB), hide empty testimonials, resolve duplicate footer.
+1. ~~**Fix ainexa template stock-image leak**~~ — DONE (commits 5eee1ac, 85c3d28).
+2. **Exercise vision scoring end-to-end** — pre-flight now passes `services` count (commit 2475749 added `_wp_repeat: "services"` to the AiNexa services grid + tokenized `{{services._item.name}}` and `{{services._item.description}}`). Remaining blockers: (a) supply non-empty `contact.phone` in payload to clear `footer_contact_missing`, (b) confirm FireCrawl is no longer being challenged by hCDN (re-fire `qa-test-live` after dashboard propagation).
+3. **Template polish for 80+ score** — fix counter placeholders (0 TB), hide empty testimonials (consider `_wp_if: "testimonials"` since AiNexa testimonials aren't tokenized for `_wp_repeat` either), resolve duplicate footer. Service-card icons currently repeat the same `AI-Icon-23-1.png` 6× because we kept ONE canonical card; consider rotating from a pool or extracting icons to a payload field.
 4. **Wire Vision analysis to front of pipeline** — conditional gate after Firecrawl, only fires when scrape is thin.
-5. **Test with instabid.pro site** — Run the full pipeline end-to-end.
+5. **Test with instabid.pro site** — Run the full pipeline end-to-end (blocked on issue #5 propagation).
 
 ## DO NOT
 
