@@ -16,7 +16,7 @@
         "flex_direction": "column",
         "background_background": "classic",
         "background_image": {
-          "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Image-BG-Imbo-1.png",
+          "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/saas-v1/assets/Image-BG-Imbo-1.png",
           "id": 635,
           "size": "",
           "alt": "",

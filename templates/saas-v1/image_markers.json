@@ -1,0 +1,21 @@
+{
+  "_format_version": "1.0",
+  "_template": "saas-v1",
+  "_notes": "Image markers that n8n workflow A6naBMqLH3eRDzjx must replace per-site before WordPress import. Decorative design assets (page background) are self-hosted in ./assets/ and referenced via raw.githubusercontent.com URLs in the template JSON \u2014 they do NOT need injection. Marker names follow the cross-template convention established in ainexa-ai-agency/image_markers.json: reusable roles (BRAND_LOGO, BADGE_*, TEAM_*, HERO, TESTIMONIAL_*) use the same name across templates so n8n's Approved-Ready lookup is portable.",
+  "markers": {
+    "IMAGE_BRAND_LOGO": {
+      "role": "brand_logo",
+      "location": "footer.json",
+      "description": "Per-site business logo. Replaces the template's placeholder Imbo Agency logo. Original asset was a colored wordmark.",
+      "fallback_category": null,
+      "default_when_empty": "remove_element"
+    }
+  },
+  "self_hosted_assets": {
+    "_base_url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/saas-v1/assets/",
+    "files": [
+      "Image-BG-Imbo-1.png"
+    ],
+    "_usage_notes": "Image-BG-Imbo-1.png is the shared decorative page hero background, referenced from about/contact/quote/services.json. Treated as a permanent template asset rather than a marker because all four pages use the identical image and the design depends on visual consistency."
+  }
+}

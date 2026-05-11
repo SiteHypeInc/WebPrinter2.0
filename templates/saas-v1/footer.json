@@ -195,7 +195,7 @@
                           "id": "1001dde8",
                           "settings": {
                             "image": {
-                              "url": "https://nva.nirmanavisual.com/imbo/wp-content/uploads/sites/57/2026/01/Logo-Imbo-Agency.png",
+                              "url": "{{IMAGE_BRAND_LOGO}}",
                               "id": 78,
                               "size": "",
                               "alt": "",
