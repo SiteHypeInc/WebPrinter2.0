@@ -2778,7 +2778,7 @@
               "id": "32817ef7",
               "settings": {
                 "content_width": "full",
-                "editor": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt",
+                "editor": "{{about_short}}",
                 "_margin": {
                   "unit": "px",
                   "top": "0",

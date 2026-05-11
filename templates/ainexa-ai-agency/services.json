@@ -330,7 +330,7 @@
                   "id": "671563be",
                   "settings": {
                     "content_width": "full",
-                    "title": "Servicesy from {{business_name}}",
+                    "title": "Services from {{business_name}}",
                     "header_size": "h1",
                     "__globals__": {
                       "typography_typography": "globals/typography?id=a573a48"
@@ -354,7 +354,7 @@
                   "id": "624b4003",
                   "settings": {
                     "content_width": "full",
-                    "editor": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt",
+                    "editor": "{{about_short}}",
                     "_margin": {
                       "unit": "px",
                       "top": "0",
@@ -2224,7 +2224,7 @@
               "id": "3d53735c",
               "settings": {
                 "content_width": "full",
-                "editor": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt",
+                "editor": "{{about_short}}",
                 "_margin": {
                   "unit": "px",
                   "top": "0",
