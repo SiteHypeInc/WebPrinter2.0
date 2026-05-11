@@ -214,50 +214,57 @@
     {
       "file": "saas/hero/saas-hero-01.jpg",
       "source": "pexels",
-      "pexels_photo_id": "7947968",
-      "original_url": "https://www.pexels.com/photo/7947968/",
+      "pexels_photo_id": "12969403",
+      "original_url": "https://www.pexels.com/photo/12969403/",
+      "alt": "Laptop displaying analytics dashboard with real-time data tracking",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/hero/saas-hero-02.jpg",
       "source": "pexels",
-      "pexels_photo_id": "7414216",
-      "original_url": "https://www.pexels.com/photo/7414216/",
+      "pexels_photo_id": "139387",
+      "original_url": "https://www.pexels.com/photo/139387/",
+      "alt": "Laptop displaying Google Analytics in a modern workspace",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/action/saas-action-01.jpg",
       "source": "pexels",
-      "pexels_photo_id": "6804068",
-      "original_url": "https://www.pexels.com/photo/6804068/",
+      "pexels_photo_id": "5474295",
+      "original_url": "https://www.pexels.com/photo/5474295/",
+      "alt": "Close-up of hands coding on a laptop",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/action/saas-action-02.jpg",
       "source": "pexels",
-      "pexels_photo_id": "33811800",
-      "original_url": "https://www.pexels.com/photo/33811800/",
+      "pexels_photo_id": "34803966",
+      "original_url": "https://www.pexels.com/photo/34803966/",
+      "alt": "Laptop screen showing programming code and debugging tools",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/team/saas-team-01.jpg",
       "source": "pexels",
-      "pexels_photo_id": "97080",
-      "original_url": "https://www.pexels.com/photo/97080/",
+      "pexels_photo_id": "6804068",
+      "original_url": "https://www.pexels.com/photo/6804068/",
+      "alt": "Team of developers working together on computers in a modern tech office",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/generic/saas-generic-01.jpg",
       "source": "pexels",
-      "pexels_photo_id": "27128551",
-      "original_url": "https://www.pexels.com/photo/27128551/",
+      "pexels_photo_id": "34069",
+      "original_url": "https://www.pexels.com/photo/34069/",
+      "alt": "Laptop showing analytics dashboard with charts and graphs",
       "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "saas/generic/saas-generic-02.jpg",
       "source": "pexels",
-      "pexels_photo_id": "6804612",
-      "original_url": "https://www.pexels.com/photo/6804612/",
+      "pexels_photo_id": "1181405",
+      "original_url": "https://www.pexels.com/photo/1181405/",
+      "alt": "Diverse group of professionals working together on laptops in a modern office",
       "license": "Pexels License (https://www.pexels.com/license/)"
     }
   ]
