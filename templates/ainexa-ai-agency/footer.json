@@ -1111,7 +1111,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Goodfirms.png",
+                          "url": "{{IMAGE_BADGE_1}}",
                           "id": 384,
                           "size": "",
                           "alt": "",
@@ -1252,7 +1252,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Peerinsights.png",
+                          "url": "{{IMAGE_BADGE_2}}",
                           "id": 385,
                           "size": "",
                           "alt": "",
@@ -1385,7 +1385,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Clutch.png",
+                          "url": "{{IMAGE_BADGE_3}}",
                           "id": 383,
                           "size": "",
                           "alt": "",

@@ -493,7 +493,7 @@
                 },
                 "background_background": "classic",
                 "background_image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/9152c48a-3a09-4065-b6e3-b05c38feda09-\u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u043d\u043d\u044b\u0439.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/decorative-shape-1.png",
                   "id": 1580,
                   "size": "",
                   "alt": "",
@@ -522,7 +522,7 @@
                   "settings": {
                     "content_width": "full",
                     "image": {
-                      "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Element1.png",
+                      "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/Element1.png",
                       "id": 139,
                       "size": "",
                       "alt": "",
@@ -625,7 +625,7 @@
                   "settings": {
                     "content_width": "full",
                     "image": {
-                      "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Element2.png",
+                      "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/Element2.png",
                       "id": 140,
                       "size": "",
                       "alt": "",
@@ -985,7 +985,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-23-1.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-23-1.png",
                   "id": 91,
                   "size": "",
                   "alt": "",
@@ -1226,7 +1226,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-14.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-14.png",
                   "id": 720,
                   "size": "",
                   "alt": "",
@@ -1467,7 +1467,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-19.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-19.png",
                   "id": 722,
                   "size": "",
                   "alt": "",
@@ -1708,7 +1708,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-8.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-8.png",
                   "id": 719,
                   "size": "",
                   "alt": "",
@@ -1949,7 +1949,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-1.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-1.png",
                   "id": 718,
                   "size": "",
                   "alt": "",
@@ -2190,7 +2190,7 @@
               "settings": {
                 "content_width": "full",
                 "image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon-18.png",
+                  "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon-18.png",
                   "id": 721,
                   "size": "",
                   "alt": "",
@@ -3215,7 +3215,7 @@
                 },
                 "background_background": "classic",
                 "background_image": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/candle-stick-graph-charts-of-stock-market-2023-11-27-05-09-34-utc.jpg",
+                  "url": "{{IMAGE_SERVICES_FEATURE_CHART}}",
                   "id": 682,
                   "size": "",
                   "alt": "",
@@ -3875,7 +3875,7 @@
                         "content_width": "full",
                         "testimonial_content": "Working with NexaAI was a game-changer for our business. The AI-driven customer support system they implemented reduced our response time by 85%, and our customer satisfaction has never been higher. Highly recommend!",
                         "testimonial_image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/portrait-of-happy-biracial-casual-businesswoman-wi-2023-11-27-05-03-18-utc-1.jpg",
+                          "url": "{{IMAGE_TESTIMONIAL_1}}",
                           "id": 505,
                           "size": "",
                           "alt": "",
@@ -4066,7 +4066,7 @@
                         "content_width": "full",
                         "testimonial_content": "The AI marketing strategies from NexaAI boosted our ROI by 200%. Their ability to target and personalize our campaigns has made a huge difference in our conversion rates. We\u2019re thrilled with the results!",
                         "testimonial_image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/vertical-shot-of-a-handsome-middle-east-man-in-for-2023-11-27-05-06-32-utc-1.jpg",
+                          "url": "{{IMAGE_TESTIMONIAL_2}}",
                           "id": 502,
                           "size": "",
                           "alt": "",
@@ -4250,7 +4250,7 @@
                         "content_width": "full",
                         "testimonial_content": "Thanks to NexaAI, we\u2019ve cut our equipment downtime by 90% and saved 40% on maintenance costs. ",
                         "testimonial_image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/young-cheerful-female-fashion-model-in-smart-casua-2023-11-27-04-59-01-utc.jpg",
+                          "url": "{{IMAGE_TESTIMONIAL_3}}",
                           "id": 343,
                           "size": "",
                           "alt": "",
@@ -4434,7 +4434,7 @@
                         "content_width": "full",
                         "testimonial_content": "Potenti sagittis interdum neque porta, semper nisl. Auctor facilisis scelerisque sollicitudin eu tristique aliquam sodales penatibus maximus. Commodo mattis nisi inceptos cursus facilisi elementum. ",
                         "testimonial_image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/happy-middle-aged-mature-business-man-looking-at-c-2024-02-09-16-00-55-utc-1.jpg",
+                          "url": "{{IMAGE_TESTIMONIAL_4}}",
                           "id": 504,
                           "size": "",
                           "alt": "",
@@ -4617,7 +4617,7 @@
                         "content_width": "full",
                         "testimonial_content": "The AI marketing strategies from NexaAI boosted our ROI by 200%. Their ability to target and personalize our campaigns has made a huge difference in our conversion rates. We\u2019re thrilled with the results!",
                         "testimonial_image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/it-took-determination-for-me-to-become-so-successf-2024-05-09-21-01-14-utc-1.jpg",
+                          "url": "{{IMAGE_TESTIMONIAL_5}}",
                           "id": 503,
                           "size": "",
                           "alt": "",

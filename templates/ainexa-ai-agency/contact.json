@@ -1270,7 +1270,7 @@
                 },
                 "background_video_link": "https://youtu.be/9HaU8NjH7bI",
                 "background_video_fallback": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/portrait-of-a-caucasian-woman-team-leader-speaking-2024-02-07-19-58-56-utc.jpg",
+                  "url": "{{IMAGE_CONTACT_TEAM_LEAD}}",
                   "id": 1184,
                   "size": "",
                   "alt": "",
@@ -1334,7 +1334,7 @@
         },
         "background_overlay_background": "classic",
         "background_overlay_image": {
-          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/1606.m00.i125.n010.S.c12.341699687-Hexagonal-dots-world-map-on-white-backgroun-vector-illustration-\u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u043d\u043d\u044b\u0439.png",
+          "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/hexagonal-world-map-bg.png",
           "id": 1069,
           "size": "",
           "alt": "",

@@ -390,7 +390,7 @@
             },
             "background_background": "classic",
             "background_image": {
-              "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/multi-ethnic-team-of-brokers-using-gadgets-for-wor-2023-11-27-04-53-35-utc.jpg",
+              "url": "{{IMAGE_ABOUT_HERO}}",
               "id": 333,
               "size": "",
               "alt": "",
@@ -1676,7 +1676,7 @@
           "settings": {
             "content_width": "full",
             "image": {
-              "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/3d-rendering-planet-earth-1-1.png",
+              "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/3d-rendering-planet-earth-1-1.png",
               "id": 235,
               "size": "",
               "alt": "",
@@ -1842,7 +1842,7 @@
                 "item_text": "At {{business_name}}, we believe in a collaborative approach. We work closely with our clients to understand their unique challenges and goals, ensuring that our solutions are perfectly aligned with their needs. ",
                 "item_image": {
                   "id": 336,
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/business-partners-at-brainstorming-meeting-in-offi-2024-07-02-04-40-01-utc-1.jpg",
+                  "url": "{{IMAGE_ABOUT_FEATURE_1}}",
                   "alt": "",
                   "source": "library",
                   "size": ""
@@ -1873,7 +1873,7 @@
                 "item_text": "We pride ourselves on our ability to deliver measurable results, whether it\u2019s boosting operational efficiency, enhancing customer experiences, or unlocking new revenue streams. ",
                 "item_image": {
                   "id": 335,
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/deep-learning-ai-empowering-businesses-with-intel-2023-11-27-04-58-50-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_FEATURE_2}}",
                   "alt": "",
                   "source": "library",
                   "size": ""
@@ -1891,7 +1891,7 @@
                 "item_text": "Our goal is to be at the forefront of this revolution, guiding businesses through the complexities of AI adoption and ensuring they reap the full benefits of this transformative technology.",
                 "item_image": {
                   "id": 334,
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/in-modern-office-diverse-young-team-wearing-glass-2024-05-29-20-09-36-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_FEATURE_3}}",
                   "alt": "",
                   "source": "library",
                   "size": ""
@@ -2099,7 +2099,7 @@
                 "memberTitle": "James Bennett",
                 "_id": "573a1d0",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/businessman-wearing-glasses-standing-in-confident-2023-11-27-05-14-24-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_1}}",
                   "id": 340,
                   "size": "",
                   "alt": "",
@@ -2134,7 +2134,7 @@
               {
                 "memberTitle": "Emily Davis\u200b",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/shot-of-a-confident-young-businesswoman-standing-a-2023-11-27-05-14-17-utc-1.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_2}}",
                   "id": 346,
                   "size": "",
                   "alt": "",
@@ -2170,7 +2170,7 @@
               {
                 "memberTitle": "Mason Wright",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/young-and-successful-2023-11-27-05-30-26-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_3}}",
                   "id": 341,
                   "size": "",
                   "alt": "",
@@ -2206,7 +2206,7 @@
               {
                 "memberTitle": "Sarah Johnson",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/young-cheerful-female-fashion-model-in-smart-casua-2023-11-27-04-59-01-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_4}}",
                   "id": 343,
                   "size": "",
                   "alt": "",
@@ -2242,7 +2242,7 @@
               {
                 "memberTitle": "Charlotte Coleman",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/positivity-can-get-you-anywhere-and-everywhere-2024-08-01-02-56-00-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_5}}",
                   "id": 345,
                   "size": "",
                   "alt": "",
@@ -2278,7 +2278,7 @@
               {
                 "memberTitle": "Lucas Clark",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/young-smiling-businessman-with-hands-in-pockets-is-2023-11-27-05-07-42-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_6}}",
                   "id": 342,
                   "size": "",
                   "alt": "",
@@ -2314,7 +2314,7 @@
               {
                 "memberTitle": "Emma Harrison",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/studio-portrait-of-smiling-businesswoman-wearing-s-2024-05-30-03-46-19-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_7}}",
                   "id": 347,
                   "size": "",
                   "alt": "",
@@ -2350,7 +2350,7 @@
               {
                 "memberTitle": "Henry Adams",
                 "tmImage": {
-                  "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/pointing-somewhere-2023-11-27-05-34-38-utc.jpg",
+                  "url": "{{IMAGE_ABOUT_TEAM_8}}",
                   "id": 344,
                   "size": "",
                   "alt": "",

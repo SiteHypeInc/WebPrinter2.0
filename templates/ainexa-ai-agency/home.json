@@ -43,7 +43,7 @@
         },
         "background_overlay_background": "classic",
         "background_overlay_image": {
-          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Background-1.png",
+          "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/Background-1.png",
           "id": 313,
           "size": "",
           "alt": "",
@@ -1318,7 +1318,7 @@
           "settings": {
             "content_width": "full",
             "image": {
-              "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/AI-Icon.png",
+              "url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/AI-Icon.png",
               "id": 16,
               "size": "",
               "alt": "",
@@ -2331,7 +2331,7 @@
             },
             "background_background": "classic",
             "background_image": {
-              "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/focus-on-laptop-running-ai-cognitive-computing-tec-2024-08-09-00-34-06-utc.jpg",
+              "url": "{{IMAGE_HOME_HERO_FEATURE}}",
               "id": 285,
               "size": "",
               "alt": "",
@@ -7442,7 +7442,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Goodfirms.png",
+                          "url": "{{IMAGE_BADGE_1}}",
                           "id": 384,
                           "size": "",
                           "alt": "",
@@ -7583,7 +7583,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Peerinsights.png",
+                          "url": "{{IMAGE_BADGE_2}}",
                           "id": 385,
                           "size": "",
                           "alt": "",
@@ -7716,7 +7716,7 @@
                       "settings": {
                         "content_width": "full",
                         "image": {
-                          "url": "https://ainexa.templatekit.co/wp-content/uploads/sites/72/2024/10/Clutch.png",
+                          "url": "{{IMAGE_BADGE_3}}",
                           "id": 383,
                           "size": "",
                           "alt": "",

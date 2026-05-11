@@ -1,0 +1,101 @@
+{
+  "_format_version": "1.0",
+  "_template": "ainexa-ai-agency",
+  "_notes": "Image markers that n8n workflow A6naBMqLH3eRDzjx must replace per-site before WordPress import. Decorative design assets (icons, backgrounds, shapes) are self-hosted in ./assets/ and referenced via raw.githubusercontent.com URLs in the template JSON — they do NOT need injection.",
+  "markers": {
+    "IMAGE_HOME_HERO_FEATURE": {
+      "role": "hero_feature_photo",
+      "location": "home.json",
+      "description": "Hero-section feature photo. Contextual to business (laptop/computing/AI for agencies, on-site work for trades). Landscape orientation.",
+      "fallback_category": "generic"
+    },
+    "IMAGE_CONTACT_TEAM_LEAD": {
+      "role": "team_portrait",
+      "location": "contact.json (background_video_fallback)",
+      "description": "Single portrait photo, used as video poster on contact page. Person speaking / addressing camera.",
+      "fallback_category": "team"
+    },
+    "IMAGE_ABOUT_HERO": {
+      "role": "team_action_photo",
+      "location": "about.json (about-section background)",
+      "description": "Team-at-work photo. Multi-person, collaborative.",
+      "fallback_category": "team"
+    },
+    "IMAGE_ABOUT_FEATURE_1": {
+      "role": "feature_photo",
+      "location": "about.json",
+      "description": "Brainstorming / collaboration photo.",
+      "fallback_category": "team"
+    },
+    "IMAGE_ABOUT_FEATURE_2": {
+      "role": "feature_photo",
+      "location": "about.json",
+      "description": "Technology / process feature photo.",
+      "fallback_category": "action"
+    },
+    "IMAGE_ABOUT_FEATURE_3": {
+      "role": "feature_photo",
+      "location": "about.json",
+      "description": "Office / team-in-environment photo.",
+      "fallback_category": "team"
+    },
+    "IMAGE_ABOUT_TEAM_1": { "role": "team_member_portrait", "location": "about.json", "slot": 1, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_2": { "role": "team_member_portrait", "location": "about.json", "slot": 2, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_3": { "role": "team_member_portrait", "location": "about.json", "slot": 3, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_4": { "role": "team_member_portrait", "location": "about.json", "slot": 4, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_5": { "role": "team_member_portrait", "location": "about.json", "slot": 5, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_6": { "role": "team_member_portrait", "location": "about.json", "slot": 6, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_7": { "role": "team_member_portrait", "location": "about.json", "slot": 7, "fallback_category": "team" },
+    "IMAGE_ABOUT_TEAM_8": { "role": "team_member_portrait", "location": "about.json", "slot": 8, "fallback_category": "team" },
+    "IMAGE_SERVICES_FEATURE_CHART": {
+      "role": "feature_photo",
+      "location": "services.json",
+      "description": "Stats / data / chart visual.",
+      "fallback_category": "generic"
+    },
+    "IMAGE_TESTIMONIAL_1": { "role": "testimonial_portrait", "location": "services.json", "slot": 1, "fallback_category": "team" },
+    "IMAGE_TESTIMONIAL_2": { "role": "testimonial_portrait", "location": "services.json", "slot": 2, "fallback_category": "team" },
+    "IMAGE_TESTIMONIAL_3": { "role": "testimonial_portrait", "location": "services.json", "slot": 3, "fallback_category": "team" },
+    "IMAGE_TESTIMONIAL_4": { "role": "testimonial_portrait", "location": "services.json", "slot": 4, "fallback_category": "team" },
+    "IMAGE_TESTIMONIAL_5": { "role": "testimonial_portrait", "location": "services.json", "slot": 5, "fallback_category": "team" },
+    "IMAGE_BADGE_1": {
+      "role": "social_proof_badge",
+      "location": "footer.json + home.json (used twice)",
+      "description": "Certification/affiliation badge slot 1. Default to nothing or SiteHype/InstaBid affiliation logo if contractor has no badges to show. Original template used Goodfirms.",
+      "fallback_category": null,
+      "default_when_empty": "remove_element"
+    },
+    "IMAGE_BADGE_2": {
+      "role": "social_proof_badge",
+      "location": "footer.json + home.json (used twice)",
+      "description": "Certification/affiliation badge slot 2. Original template used Peerinsights.",
+      "fallback_category": null,
+      "default_when_empty": "remove_element"
+    },
+    "IMAGE_BADGE_3": {
+      "role": "social_proof_badge",
+      "location": "footer.json + home.json (used twice)",
+      "description": "Certification/affiliation badge slot 3. Original template used Clutch.",
+      "fallback_category": null,
+      "default_when_empty": "remove_element"
+    }
+  },
+  "self_hosted_assets": {
+    "_base_url": "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/assets/",
+    "files": [
+      "Background-1.png",
+      "AI-Icon.png",
+      "AI-Icon-1.png",
+      "AI-Icon-8.png",
+      "AI-Icon-14.png",
+      "AI-Icon-18.png",
+      "AI-Icon-19.png",
+      "AI-Icon-23-1.png",
+      "Element1.png",
+      "Element2.png",
+      "3d-rendering-planet-earth-1-1.png",
+      "decorative-shape-1.png",
+      "hexagonal-world-map-bg.png"
+    ]
+  }
+}
