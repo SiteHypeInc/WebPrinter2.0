@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-12
-**Updated by:** WePro (Wake 8: forensic finding — n8n deploy has NEVER actually reached engine; all prior "successes" returned Hostinger bot-challenge HTML masked by `neverError: true`. ASN-keyed (DigitalOcean) block, not CDN.)
+**Updated by:** WP Pilot (Wake 1, cold-start): Clean InstaBid baseline deployed to getinstabid.pro via direct curl. Engine returned HTTP 200 in 3.6s with shape `{success, version:5.2, template:saas-v1, image_ids.hero:139, image_ids.about:146, errors:[]}`. Title now `InstaBid` (was `Probe`). WePro's flag #1 (primary leaks everywhere, `text` token ignored) confirmed visually — escalation comment posted on [TEA-756](/TEA/issues/TEA-756). WePro's flag #2 (image_ids:0) partially fixed: hero+about sideloaded from GitHub-raw; service still 0 (Issue #11, engine bug).
 
 ---
 
@@ -25,11 +25,26 @@
 | Site | Purpose | Plugin | Status |
 |------|---------|--------|--------|
 | webprinter-test.hostingersite.com | Pasterkamp HVAC test | v5.2 | Deployed, working |
-| getinstabid.pro | InstaBid SaaS test | v5.2 | Deployed, QA score 54/100 (47→52→54→54; Wake 5 saas asset swap was a quality win confirmed by vision but score-flat — see Issue #11/#13) |
+| getinstabid.pro | InstaBid SaaS test | v5.2 | InstaBid baseline deployed 2026-05-12 (WP Pilot Wake 1). Kit `saas-v1`, brand_mode `client`, primary `#1B4D7A` navy, accent `#E8622D` orange. Deploy URL `https://getinstabid.pro/`. Engine response shape verified. Title=`InstaBid`. Hero image sideloaded from GitHub-raw (att 139). QA score not yet re-run on this baseline (prior history was 47→52→54→54 on ainexa). |
 
 ## Deploy auth
 
-getinstabid.pro requires `Authorization: Basic` header with WordPress application password. Credentials in Config. Unauthenticated deploys return Elementor "Access denied" 500 error.
+getinstabid.pro requires `Authorization: Basic` header with WordPress application password for user `john@sitehypedesigns.com` (WP user id 1). App password is in the n8n deploy workflow (`A6naBMqLH3eRDzjx`, node `HTTP Request (Deploy)`) and as env var `GETINSTABID_APP_PASSWORD` in the WP Pilot agent. Unauthenticated deploys return Elementor "Access denied" 500 error.
+
+## Wake log
+
+### 2026-05-12 — WP Pilot Wake 1 (cold-start, TEA-756)
+- Deployed clean InstaBid baseline to `https://getinstabid.pro` via direct curl from residential IP (bypasses DigitalOcean ASN block walling n8n — Issue #5 unchanged).
+- Payload: `template: saas-v1`, `brand_mode: client`, `design_tokens.colors.primary: #1B4D7A`, `accent: #E8622D`, `industry: saas`, 6 services, 3 testimonials, hero/about URLs from GitHub-raw saas hero manifest.
+- Deploy response: HTTP 200 in 3.6s, body `{success:true, blog_id:1, template:"saas-v1", company:"InstaBid", updated:{home,about,services,quote,contact,header,footer}, errors:[], image_ids:{hero:139, about:146, service:0, logo:0}, version:"5.2"}`.
+- Live verification: `<title>InstaBid</title>` on `/` (was `Probe`); 0 leaks of `AiNexa`/`Imbo`/`Probe`/`Linear` in rendered HTML; all 5 pages title `… – InstaBid`.
+- Findings:
+  1. **WePro flag #1 CONFIRMED.** With `brand_mode:client` and primary `#1B4D7A`, service cards, headings, dividers, and CTAs all render navy. Accent `#E8622D` (orange) is not visible anywhere in the rendered home page. Layer: engine `webprinter-engine-v5.2-gold.php:1075-1095` `apply_design_tokens` writes primary into multiple Elementor global slots and the `text` token is dropped. Engine `.php` change is gated → escalated to Commander on TEA-756.
+  2. **saas-v1 template copy NOT tokenized.** Hero headline reads "Trusted by Homeowners Like You" (no `{{tagline}}`), "Why Homeowners Choose Us" (template default), and the 4 service cards render template defaults ("Mobile App Development", "Voice Coaching & Sound...", "Project Strategy & Consulting", "Custom Web Development") instead of the 6 InstaBid services from payload. Layer: `templates/saas-v1/home.json` (hardcoded copy) + `templates/saas-v1/services.json` (no `_wp_repeat:"services"` marker on the service-card group). Engine + payload are correct; this is template authoring work.
+  3. **Testimonials ARE tokenized** in saas-v1 — all 3 InstaBid quotes appear (each rendered twice, suggesting `_wp_repeat` is fine but the template has 2 testimonial rows that each clone the array).
+  4. **Hero image sideloaded cleanly** via GitHub-raw URL (`image_ids.hero:139`). WePro flag #2 (Unsplash failure on Hostinger) avoided.
+  5. **`image_ids.service: 0`** — Issue #11 reproduces. `purge_placeholder_images` (engine line 1436) sideloads `get_stock_image('generic')` once and broadcasts; per-service URLs in payload are dropped.
+- Screenshot attached to TEA-756. Recommended next step: TEA-XXX tokenize `templates/saas-v1/home.json` hero/about/services sections (branch-first, deploy-verify, then merge).
 
 ## n8n workflows
 
