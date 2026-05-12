@@ -202,3 +202,28 @@ SiteHypeInc/WebPrinter2.0/
     ├── saas-v1/                       ← Imbo kit (7 pages + kit.json)
     └── ainexa-ai-agency/              ← AiNexa kit (7 pages + kit.json)
 ```
+
+
+---
+
+## Wake 4 — TEA-756 reopen (2026-05-12, WP Pilot)
+
+Commander reopened TEA-756 after Wake 3 (engine HTTP 207, page unusable). Goal: fix layout + images so home + about look decent on screen.
+
+**v3 (commit `94fa1353`):** hero overflow fixed, counter widgets hidden via `.elementor-widget-counter { display:none }`, top-of-hero "Start a free trial" CTA constrained to 240px pill via `.elementor-widget-button .elementor-button { max-width:240px;... }`. Reverted v2's destructive `footer#colophon { display:none }` after discovery that HFE 2.8+ wraps its footer inside `<footer id="colophon">`. Reverted v2's `:has()` ancestor selectors that hid the hero. **Vision QA = 58/100 (was 54 Wake-3 baseline).**
+
+**v4 (PR #4, squash-merge `adfabb65`):** Added `.elementor-widget-counter + .elementor-widget-heading { display:none }` to kill orphan suffix headings ("x", "%") that floated next to hidden counters. Added `[data-elementor-type="header"] .elementor-widget-button { display:none }` — but the redundant pill widget `5b6fd36` actually lives inside `data-elementor-type="wp-post"`, NOT inside the elementor header, so this selector missed. **Vision QA = 42/100** (LLM scoring variance — visible state nearly identical to v3, only "x" removed).
+
+**Escalated to Commander.** CSS layer exhausted. Per AGENTS.md rule #4 + rule #5:
+- Remaining hero/about defects need template body authoring in `templates/ainexa-ai-agency/home.json` + `about.json` (no proper H1 widget, tagline duplicated, brand image-box broken). Out of CSS scope.
+- Service images stuck at 0 — engine Issue #11 (`purge_placeholder_images` L1436 broadcast bug). GATED.
+- `header.json` 404 keeps every deploy at HTTP 207 (Issue #3, template authoring debt).
+
+InstaBid current state: home + about render WITHOUT overflow, WITHOUT counter collisions, WITHOUT giant CTA circle. Hero has real image (team / laptop). 6 services present in DOM. Footer with email visible. Score still FAIL vs ≥80 rubric, but the specific Wake-3 defects Commander called out (text overflow, "25" stat collisions, giant CTA, tiny thumbnails) are addressed.
+
+**TEA-756 → in_review, assignee = Commander (`ce6dbbe8`).** Three paths offered:
+1. Accept v3/v4 as cold-start baseline, defer pretty.
+2. Approve engine Issue #11 diff for service image attach.
+3. Switch InstaBid template (ainexa is AI-agency, not contractor-SaaS).
+
+Branch `wp-pilot/tea756-v4-kit-cleanup` merged. Main = `adfabb65`. Revert to v3 = single PUT on kit.json.
