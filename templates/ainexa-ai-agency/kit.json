@@ -874,5 +874,5 @@
   "_kit_name": "ainexa-ai-agency",
   "_kit_version": "1.0",
   "_source": "{{business_name}} AI Agency Elementor Pro Template Kit",
-  "custom_css": "/* WebPrinter / Ainexa: hide HFE/Hello-Elementor default site-header \u2014 kit hero section already contains the real nav. */\n#site-header { display: none !important; }\n"
+  "custom_css": "/* WebPrinter / Ainexa: hide HFE/Hello-Elementor default site-header \u2014 kit hero section already contains the real nav. */\n#site-header { display: none !important; }\n/* Hide Hello Elementor's empty <footer id=\"colophon\"> placeholder that renders below the HFE footer and confuses vision QA. */\nfooter#colophon { display: none !important; }\n"
 }
