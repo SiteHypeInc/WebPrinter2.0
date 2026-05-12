@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-12
-**Updated by:** WP Pilot (Wake 2, TEA-758): Migrated both Firecrawl HTTP nodes in `A6naBMqLH3eRDzjx` to native `n8n-nodes-firecrawl@0.3.0` community nodes with `fireCrawlApi` credential. End-to-end smoke (exec 1075) confirms parity: `HTTP Request (Firecrawl)` 421ms, `Source Screenshot (FireCrawl)` 1070ms, all downstream consumers (Claude Normalize, Pexels, Vision DNA) ran clean. Pipeline still fails at `HTTP Request (Deploy)` (130s timeout, Issue #5 — pre-existing, unrelated to migration; pre-migration execs 1068/1069 failed identically). Wake 1 InstaBid baseline + WePro flag #1/#2 findings preserved below.
+**Updated by:** WP Pilot (Wake 3, TEA-756 redo per board correction): Redeployed `getinstabid.pro` against `templates/ainexa-ai-agency` instead of `saas-v1`, with brand identity derived from `https://instabid.pro` scrape (not hardcoded). Real DNA: dominant cyan `#00D4FF` ×18 + dark bg `#0D1117`, theme=dark, vibe=tech-forward, industry=saas. Override surface: `design_tokens.colors.accent = #00D4FF` only (kept ainexa kit's white-on-dark primary/secondary/text to preserve dark-template contrast). Deploy fired direct from this Mac (residential IP) after n8n exec 1082 hung on Issue #5 ASN bot-wall (still unblocked). Engine `handle_deploy` returned HTTP 207, `{success:false, blog_id:1, template:"ainexa-ai-agency", company:"InstaBid", updated:{home,about,services,quote,contact,footer}, errors:{header:"Template returned HTTP 404"}, image_ids:{hero:146,about:145,service:0,logo:0}, version:"5.2"}` — `success:false` is solely because `templates/ainexa-ai-agency/header.json` doesn't exist (Issue #3, known, Hello fallback header hidden by kit.json custom_css). All 5 pages + footer rendered. QA chain exec 1085 ran end-to-end: pre-flight PASS (1 skip), Vision score 54/100 FAIL (hero 10/15, branding 12/15, content 10/20, images 8/15, layout 6/15, mobile 6/10, conversion 5/10) — score flat with prior ainexa baselines (Wake 1-7 history: 47→52→54→54). Layer-named blockers remain: Issue #11 (engine `purge_placeholder_images` broadcasts one stock — image_ids.service:0), Issue #13 (ainexa home.json hero CSS void + mobile overflow), Issue #15 (HFE footer dark-on-dark contrast). Outreach correctly blocked. Wake 2 firecrawl migration findings preserved below.
 
 ---
 
@@ -25,13 +25,52 @@
 | Site | Purpose | Plugin | Status |
 |------|---------|--------|--------|
 | webprinter-test.hostingersite.com | Pasterkamp HVAC test | v5.2 | Deployed, working |
-| getinstabid.pro | InstaBid SaaS test | v5.2 | InstaBid baseline deployed 2026-05-12 (WP Pilot Wake 1). Kit `saas-v1`, brand_mode `client`, primary `#1B4D7A` navy, accent `#E8622D` orange. Deploy URL `https://getinstabid.pro/`. Engine response shape verified. Title=`InstaBid`. Hero image sideloaded from GitHub-raw (att 139). QA score not yet re-run on this baseline (prior history was 47→52→54→54 on ainexa). |
+| getinstabid.pro | InstaBid SaaS test | v5.2 | **Wake 3 redeploy 2026-05-12 (TEA-756 redo):** kit `ainexa-ai-agency`, brand_mode `client`, scraped accent `#00D4FF` (cyan, ×18 on source homepage). Other slots: kept ainexa kit defaults (primary `#FFFFFF`, secondary `#EBEBEB`, text `#D8D8D8`). Engine 207 — all 5 pages + footer updated; ainexa header.json 404 (Issue #3). Title=`InstaBid` across all 5 pages, 0 leaks of `Probe/AiNexa/Imbo/Linear/#5e6ad2`. QA exec 1085 = score 54 FAIL (flat with prior ainexa baseline, blockers all engine/template-side: #11 engine-gated, #13 ainexa home.json CSS, #15 HFE footer contrast). Hero att 146, about att 145, service att 0 (Issue #11 reproduces). Wake 1 saas-v1 baseline (2026-05-12 AM) superseded by this deploy. |
 
 ## Deploy auth
 
 getinstabid.pro requires `Authorization: Basic` header with WordPress application password for user `john@sitehypedesigns.com` (WP user id 1). App password is in the n8n deploy workflow (`A6naBMqLH3eRDzjx`, node `HTTP Request (Deploy)`) and as env var `GETINSTABID_APP_PASSWORD` in the WP Pilot agent. Unauthenticated deploys return Elementor "Access denied" 500 error.
 
 ## Wake log
+
+### 2026-05-12 — WP Pilot Wake 3 (TEA-756 redo, scrape-first + ainexa override)
+
+**Board correction:** Wake 1 baseline used hardcoded navy `#1B4D7A` + orange `#E8622D` on `saas-v1`. Board flagged this — "Navy and orange is on brand with what??" — and Commander corrected scope: scrape `instabid.pro` for brand identity, use `ainexa-ai-agency` template, deploy client-mode. Per Commander's last directive (comment `8a37af5d`), posted named-node spec on TEA-756 (comment `2130bbd5`) before redeploying.
+
+**Source DNA (extracted by direct GET of `https://instabid.pro` from this Mac — Firecrawl key not exposed locally and n8n exec hung on bot-wall):**
+- `<title>`: `InstaBid — AI Contractor Estimating Software | Win More Jobs`
+- `og:site_name`: `Instabid`
+- Hex frequency (top 5): `#00d4ff ×18` (cyan), `#0d1117 ×8` (dark bg), `#00e5ff ×6`, `#8b949e ×5`, `#ffffff ×4`. Pattern = dark SaaS theme, cyan-accented.
+- Industry: `saas` (per `docs/normalization-rules.md` rule — "saas", "platform", "estimating software" all match)
+
+**Brand override decision:** ainexa kit.json `system_colors` are `primary:#FFFFFF / secondary:#EBEBEB / text:#D8D8D8 / accent:#5DD7F2` — a dark template where `primary` = white text and `accent` = the cyan CTA color. Overriding `primary` with scraped cyan would invert contrast. Cleanest mapping: `design_tokens.colors = { accent: "#00D4FF" }` — replaces template's `#5DD7F2` with InstaBid's actual brand cyan and lets the dark template carry the rest. Engine `apply_design_tokens` L1081-1091 iterates only `_id`s that exist in kit + are present in payload, so unspecified slots stay at kit defaults.
+
+**Deploy path:** n8n webhook fire at 20:46:20Z returned 504 (nginx) within 60s; n8n exec 1082 stayed running > 130s — almost certainly bot-walled on `HTTP Request (Deploy)` per Issue #5 (DigitalOcean ASN still not whitelisted in hPanel). Pivoted to direct curl from this Mac (residential IP) → engine returned HTTP 207 in 7.4s with engine-shape body (`success:false` only because of header.json 404 — Issue #3 — all 5 pages and footer updated cleanly).
+
+**Live verification:**
+- `<title>InstaBid</title>` on `/`, `About – InstaBid` on `/about/`, same pattern for `/services /quote /contact`
+- 15 explicit `InstaBid` mentions, 0 occurrences of `Probe / AiNexa / Imbo / Linear / #5e6ad2`
+- 0 marker leaks (`_wp_repeat / _wp_if / _wp_img / _wp_stock / {{` all zero on rendered home)
+- Content rendered: "AI Estimate" ×2, "Home Depot" ×6 from `about_long`
+- Hero att 146, about att 145 (GitHub-raw sideload) — Issue #11 reproduces: `image_ids.service:0` (engine `purge_placeholder_images` L1436 broadcasts one stock URL)
+
+**QA chain run:** `qa-test-live` webhook fired with the seed (camelCase field names per `QA — Test Seed (live)` shape: `siteUrl, demoUrl, businessName, services[]`). Exec 1085 ran end-to-end:
+- Pre-flight: PASS (`pages_reachable ✅, name_in_header ✅, services_three_plus ✅, no_lorem_no_template_brands ✅, instabid_embed_on_quote ✅, hero_img_src_present ✅`; `footer_real ❌` skipped via `qa_skip_failures` — Issue #2 known heuristic)
+- Vision score: **54/100 FAIL** — categories: hero 10/15, branding 12/15, content 10/20, images 8/15, layout 6/15, mobile 6/10, conversion 5/10
+- Top issues (all known and layer-named):
+  - `critical` Hero image void on desktop — Issue #13 (ainexa home.json hero section min-height + marquee width, template-side fix)
+  - `critical` Footer missing/contrast — Issue #15 (HFE footer dark-on-dark, kit.json custom_css fix)
+  - `critical` Per-service images all identical — Issue #11 (engine `purge_placeholder_images` L1436, engine-gated, escalated to Commander)
+  - `critical` Content brand mention — vision flagged "Home Depot" as potentially unlicensed (it's a real source-site claim per the `about_long`, so this is a content-tone decision, not a bug)
+- Score Gate routed FAIL → `QA — Review Queue Write` (correct per design — auto-fix is for REVIEW 60-79, not FAIL <60). Outreach blocked.
+- Firecrawl QA screenshot (signed, expires 2026-05-19): https://storage.googleapis.com/firecrawl-scrape-media/screenshot-b4f02402-e5f4-4239-b8d7-27d276322f45.png
+
+**Honest score-flat read:** 54 here is on `ainexa-ai-agency`, matching the Wake 1-7 ainexa baseline ceiling. It is NOT a regression off the Wake 1 saas-v1 baseline (which was never re-scored on this template). Score-flat per AGENTS.md rule = "no progress, layer = template + engine" — the unmoved categories (layout, images, hero) all map to the 3 known blockers above, none of which can be resolved inside the TEA-756 cold-start scope (engine `.php` is gated, and template authoring polish is a separate TEA).
+
+**Open watch items going out:**
+- Issue #5 (DigitalOcean ASN bot-wall) still walls n8n's deploy egress. John's hPanel IP whitelist still pending; cold-start deploys can be done by direct curl from a non-DO IP in the meantime.
+- LiteSpeed Cache still deactivated per task brief (not re-enabled).
+- Token alignment: confirmed engine reads `payload.design_tokens.colors` (L1078) — `Merge Design DNA` already writes under that path (Wake 9 patch (b)+(c)).
 
 ### 2026-05-12 — WP Pilot Wake 2 (TEA-758, n8n-nodes-firecrawl migration)
 - Installed `n8n-nodes-firecrawl@0.3.0` (by @minhlucvan, registers `n8n-nodes-firecrawl.fireCrawl`) on n8n.instabid.pro via `POST /rest/community-packages`.
