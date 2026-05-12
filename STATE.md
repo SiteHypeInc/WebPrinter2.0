@@ -1,7 +1,7 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-12
-**Updated by:** WP Pilot (Wake 1, cold-start): Clean InstaBid baseline deployed to getinstabid.pro via direct curl. Engine returned HTTP 200 in 3.6s with shape `{success, version:5.2, template:saas-v1, image_ids.hero:139, image_ids.about:146, errors:[]}`. Title now `InstaBid` (was `Probe`). WePro's flag #1 (primary leaks everywhere, `text` token ignored) confirmed visually — escalation comment posted on [TEA-756](/TEA/issues/TEA-756). WePro's flag #2 (image_ids:0) partially fixed: hero+about sideloaded from GitHub-raw; service still 0 (Issue #11, engine bug).
+**Updated by:** WP Pilot (Wake 2, TEA-758): Migrated both Firecrawl HTTP nodes in `A6naBMqLH3eRDzjx` to native `n8n-nodes-firecrawl@0.3.0` community nodes with `fireCrawlApi` credential. End-to-end smoke (exec 1075) confirms parity: `HTTP Request (Firecrawl)` 421ms, `Source Screenshot (FireCrawl)` 1070ms, all downstream consumers (Claude Normalize, Pexels, Vision DNA) ran clean. Pipeline still fails at `HTTP Request (Deploy)` (130s timeout, Issue #5 — pre-existing, unrelated to migration; pre-migration execs 1068/1069 failed identically). Wake 1 InstaBid baseline + WePro flag #1/#2 findings preserved below.
 
 ---
 
@@ -32,6 +32,25 @@
 getinstabid.pro requires `Authorization: Basic` header with WordPress application password for user `john@sitehypedesigns.com` (WP user id 1). App password is in the n8n deploy workflow (`A6naBMqLH3eRDzjx`, node `HTTP Request (Deploy)`) and as env var `GETINSTABID_APP_PASSWORD` in the WP Pilot agent. Unauthenticated deploys return Elementor "Access denied" 500 error.
 
 ## Wake log
+
+### 2026-05-12 — WP Pilot Wake 2 (TEA-758, n8n-nodes-firecrawl migration)
+- Installed `n8n-nodes-firecrawl@0.3.0` (by @minhlucvan, registers `n8n-nodes-firecrawl.fireCrawl`) on n8n.instabid.pro via `POST /rest/community-packages`.
+- Created `fireCrawlApi` credential `Firecrawl API (WebPrinter)` (id `b9XuklKF3EmwLasp`) carrying the existing Firecrawl key.
+- Built a throwaway parity workflow (`SL44SrzZksHiaUuU`, deleted after verify): Webhook → native FireCrawl `Scrape A Url And Get Its Content` → Respond. Two test fires (typed mode + `useCustomBody: true`) against `https://example.com` returned byte-identical envelopes to a raw `curl https://api.firecrawl.dev/v1/scrape` baseline at the keys downstream nodes read (`success`, `data.markdown`, `data.metadata`).
+- PATCHed `A6naBMqLH3eRDzjx` (versionId `03cc779a…` → `e4bba1b9…`), swapping both Firecrawl HTTP Request nodes for the native node while preserving node ids, names, positions, and connections:
+  - `HTTP Request (Firecrawl)` (markdown scrape, used by Claude Normalize) → `n8n-nodes-firecrawl.fireCrawl` Scrape op, `useCustomBody: true`, body `{ url, formats:["markdown"], onlyMainContent:true, timeout:15000 }`.
+  - `Source Screenshot (FireCrawl)` (screenshot scrape, used by Vision Design DNA) → same native node, `useCustomBody: true`, body `{ url, formats:["screenshot"], onlyMainContent:false, timeout:30000, maxAge:0 }` + node-level `requestOptions.timeout: 60000`. **Rationale for `useCustomBody`**: native v0.3.0 typed UI exposes only `url`, `formats` (markdown/html/extract — no screenshot), `extract`, `actions` for the Scrape op; it does NOT expose `onlyMainContent`, `timeout`, `maxAge`. `useCustomBody` keeps the request body byte-identical to the prior HTTP node while still routing auth via the native credential.
+  - Backup: `WebPrinterBoltjsonPHP/n8n-backups/A6naBMqLH3eRDzjx_pre-firecrawl-native_2026-05-12T1133.json`.
+- End-to-end smoke (exec 1075, source = `https://example.com`, deploy target = getinstabid.pro):
+  - `HTTP Request (Firecrawl)` [native] — OK, 421ms.
+  - `Claude AI (content normalization)` — OK, 2173ms (consumed `$json.data.markdown` from the native node unchanged).
+  - `Pexels Stock Sourcing` — OK, 79ms.
+  - `Source Screenshot (FireCrawl)` [native] — OK, 1070ms.
+  - `Vision — Design DNA` — OK, 11621ms (consumed `$json.data.screenshot` from the native node unchanged).
+  - `Merge Design DNA` — OK; `Probe Egress IP` — OK.
+  - `HTTP Request (Deploy)` — **error, 130694ms timeout** → pre-existing Issue #5 (Hostinger walling DigitalOcean ASN). Confirmed no regression: prior execs 1068 and 1069 failed identically on the same node before migration.
+- Net: Firecrawl migration is functionally verified and does not change pipeline behavior at the seams downstream nodes care about. The QA chain in `3M01yRKUlwbSHqEK` is untouched (out of scope; queued for a separate ticket after the deploy workflow stays stable).
+- Sibling work still queued (out of scope for TEA-758): SnapRender integration (blocked on John providing key) will replace `Source Screenshot (FireCrawl)` entirely; the QA chain Firecrawl preflight + screenshots migrate after SnapRender lands.
 
 ### 2026-05-12 — WP Pilot Wake 1 (cold-start, TEA-756)
 - Deployed clean InstaBid baseline to `https://getinstabid.pro` via direct curl from residential IP (bypasses DigitalOcean ASN block walling n8n — Issue #5 unchanged).
