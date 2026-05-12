@@ -1,7 +1,7 @@
 # WebPrinter State
 
-**Last updated:** 2026-05-11
-**Updated by:** WePro (Wake 6: Vision Mode 1 — Design DNA Extraction — wired into deploy pipeline; verified end-to-end on linear.app)
+**Last updated:** 2026-05-12
+**Updated by:** WePro (Wake 7: confirmed hCDN walls n8n→deploy specifically — local curl deploys in 3.3s; verified colophon already suppressed by HFE; QA still 38-54 range pending hero layout + per-service image plumbing)
 
 ---
 
@@ -70,7 +70,7 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 2. **footer_contact_missing** — pre-flight check looks at `home.slice(-6000)` for phone/email/city. With `phone=""`, only the email regex and `Portland` literal can clear it. **Wake 4:** `qa_skip_failures` array in webhook payload is now permanently honored by `QA — Pre-flight HTML` node (filters before pass/fail decision and exposes `preflight_failures_all` + `preflight_skipped` for audit). Permanent semantic fix still TODO: OR across phone/email/city plus a longer slice (HFE footer renders mid-document, not at tail).
 3. **header.json missing** — AiNexa kit has no HFE header template. Hello Elementor default header renders instead (oversized logo). kit.json has CSS to hide it.
 4. **Image IDs returning 0** — stock manifest sideload depends on URLs being reachable from WordPress host. GitHub-raw mirrored images work. Unsplash fails on Hostinger.
-5. **n8n / FireCrawl → Hostinger network blocked on BOTH properties** — RESOLVED 2026-05-11. CDN toggled OFF in hPanel for both `getinstabid.pro` and `instabid.pro`. End-to-end QA via `qa-test-live` now returns clean preflight + vision results from getinstabid.pro.
+5. **n8n → Hostinger deploy timeout** — REOPENED 2026-05-12 (Wake 7). Wake 6 end-to-end test of `webprinter-5-1` against `linear.app` failed at the Deploy step with "connection timed out" hitting `getinstabid.pro/wp-json/webprinter/v1/deploy` from n8n. Diagnostic: from local Mac the same deploy endpoint returns HTTP 207 in **3.3s** with full payload. hCDN is walling n8n IPs specifically (FireCrawl scrape paths are fine because they were re-toggled in Wake 4 — only the deploy egress hits the wall). **John action:** in hPanel for `getinstabid.pro`, whitelist n8n outbound IPs in CDN/firewall, OR keep CDN fully off for the deploy endpoint. Until then: pipeline runs Mode 1 + Pexels cleanly but cannot land the deploy via n8n.
 6. **Sibling Imbo URL leak in saas-v1** — RESOLVED 2026-05-11 (commit 85c3d28). 5 `nva.nirmanavisual.com/imbo/...` URLs replaced; one self-hosted asset added at `templates/saas-v1/assets/Image-BG-Imbo-1.png`.
 7. ~~**"Servicesy from {{business_name}}" typo + 3 lorem-ipsum blurbs in AiNexa templates**~~ — RESOLVED 2026-05-11 (commit a5f88b7). Typo fixed in `services.json:333`; `Excepteur sint occaecat…` replaced with `{{about_short}}` in `services.json` (2 occurrences) and `about.json` (1 occurrence). Verified clean on live `https://getinstabid.pro/services/`.
 8. ~~**FireCrawl /scrape cache makes vision scores stale**~~ — RESOLVED 2026-05-11 (Wake 4). `maxAge: 0` made permanent across all 5 FireCrawl call sites (Pre-flight HTML + 4 capture nodes) in workflow `3M01yRKUlwbSHqEK`.
@@ -85,7 +85,7 @@ WordPress Deploy → QA Pre-flight HTML (FireCrawl proxy) → Pre-flight Pass?
 
 14. **Vision Mode 1 wired into deploy pipeline (Wake 6)** — workflow `A6naBMqLH3eRDzjx` chain is now: `Webhook → FireCrawl → Claude Normalize → Pexels → Source Screenshot (FireCrawl) → Vision — Design DNA (OpenRouter sonnet-4.6) → Merge Design DNA (Code) → Deploy`. Merge node writes `template_override`, `brand_mode`, `brand_colors`, `design_profile`, and overrides `industry` from vision's `content_observations.industry_guess`. Deploy body builder honors `p.template_override` (whitelist: saas-v1, ainexa-ai-agency, bold-v2, Green-v2, Authority-v2, premium-v2) and passes through `brand_mode`/`brand_colors`/`design_profile`. End-to-end verified 2026-05-11 via `linear.app`: vision returned `recommended_template: ainexa-ai-agency`, `brand_colors.accent: #5e6ad2` (Linear's actual purple), `vibe: tech-forward`, `quality_score: 96`. All 8 pipeline stages ran clean — only Deploy timed out on `getinstabid.pro` (same hCDN IP block per Issue #5; n8n IPs not yet whitelisted there). Spec: `Vision.md` (committed 7903eac).
 
-15. **HFE footer + Hello Elementor `<footer id="colophon">` co-existence** — Wake 6 commit `77c5b4a` added `footer#colophon { display: none !important; }` to `ainexa-ai-agency/kit.json` `custom_css` alongside the existing `#site-header` hide. Will land on next successful deploy (currently gated by hCDN on getinstabid.pro per Issue #5).
+15. **HFE footer + Hello Elementor `<footer id="colophon">` co-existence** — Wake 6 commit `77c5b4a` added `footer#colophon { display: none !important; }` to `ainexa-ai-agency/kit.json` `custom_css`. Wake 7 inspection of live rendered HTML on getinstabid.pro shows **zero `<footer id="colophon">` occurrences** — HFE already suppresses Hello Elementor's colophon when a footer is mapped to `basic-global`. So this CSS is harmless precaution; the "Footer Missing" vision flag is **not** a DOM problem. Likely a contrast / viewport-bottom void issue. Re-classify as cosmetic — possibly increase HFE footer contrast or add a bottom-of-page accent bar.
 
 ## NEXT ACTIONS (in priority order)
 
