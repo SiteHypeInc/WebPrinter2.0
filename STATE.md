@@ -1,7 +1,22 @@
 # WebPrinter State
 
 **Last updated:** 2026-05-12
-**Updated by:** WP Pilot (Wake 3, TEA-756 redo per board correction): Redeployed `getinstabid.pro` against `templates/ainexa-ai-agency` instead of `saas-v1`, with brand identity derived from `https://instabid.pro` scrape (not hardcoded). Real DNA: dominant cyan `#00D4FF` ×18 + dark bg `#0D1117`, theme=dark, vibe=tech-forward, industry=saas. Override surface: `design_tokens.colors.accent = #00D4FF` only (kept ainexa kit's white-on-dark primary/secondary/text to preserve dark-template contrast). Deploy fired direct from this Mac (residential IP) after n8n exec 1082 hung on Issue #5 ASN bot-wall (still unblocked). Engine `handle_deploy` returned HTTP 207, `{success:false, blog_id:1, template:"ainexa-ai-agency", company:"InstaBid", updated:{home,about,services,quote,contact,footer}, errors:{header:"Template returned HTTP 404"}, image_ids:{hero:146,about:145,service:0,logo:0}, version:"5.2"}` — `success:false` is solely because `templates/ainexa-ai-agency/header.json` doesn't exist (Issue #3, known, Hello fallback header hidden by kit.json custom_css). All 5 pages + footer rendered. QA chain exec 1085 ran end-to-end: pre-flight PASS (1 skip), Vision score 54/100 FAIL (hero 10/15, branding 12/15, content 10/20, images 8/15, layout 6/15, mobile 6/10, conversion 5/10) — score flat with prior ainexa baselines (Wake 1-7 history: 47→52→54→54). Layer-named blockers remain: Issue #11 (engine `purge_placeholder_images` broadcasts one stock — image_ids.service:0), Issue #13 (ainexa home.json hero CSS void + mobile overflow), Issue #15 (HFE footer dark-on-dark contrast). Outreach correctly blocked. Wake 2 firecrawl migration findings preserved below.
+**Updated by:** WP Pilot (Wake 5, TEA-756 close — Path 1, accept v3 as v0.1 cold-start baseline). Commander direction in comment `e30980ed` after Wake 4 stopped CSS iteration on rule #4: revert v4 → v3, ship as v0.1, park engine + template fixes as WebPrinter2.0 GitHub product items (not Paperclip execution work). Action this wake: branch-first revert PR `#5` (commit `d696940`) on `main` rolls `templates/ainexa-ai-agency/kit.json` back to v3 state (commit `94fa1353` content, pre-v4 squash). Re-deploy fired direct from this Mac against the same `templates/ainexa-ai-agency` + `brand_mode: client` + scrape-derived `design_tokens.colors.accent = #00D4FF` payload that v3 ran at 16:43 UTC. Engine returned HTTP 207 in 4.4s with engine shape `{success:false, blog_id:1, template:"ainexa-ai-agency", company:"InstaBid", updated:{home,about,services,quote,contact,footer}, errors:{header:"Template returned HTTP 404"}, image_ids:{hero:139, about:138, service:0, logo:0}, version:"5.2"}` — `success:false` still solely from missing `templates/ainexa-ai-agency/header.json` (Issue #3, unchanged). All 5 pages + footer re-rendered. Live verification: `/wp-json/webprinter/v1/health` returns `{"status":"ok","version":"5.2"}`; `<title>InstaBid</title>` on `/`; `<title>About – InstaBid</title>` on `/about/`; 0 occurrences of `Probe / AiNexa / Imbo / Linear / #5e6ad2`. Per-post kit CSS (`post-8.css`) now serves v3 baseline rules (`overflow-x: hidden`, `max-width: 240px`, `border-radius: 999px`, `.elementor-widget-counter { display: none }`) and is free of the v4 selectors (`.elementor-widget-counter + .elementor-widget-heading`, `[data-elementor-type="header"] .elementor-widget-button`). Vision score accepted at **58/100** from the v3 deploy at 16:43 UTC recorded in comment `5024f7c6` — no re-QA this wake per Commander direction.
+
+**v0.1 cold-start baseline — recorded fields:**
+- Commit (kit content): `94fa1353` (PR #3 squash on main as `e0f9966`; restored via revert PR #5 squash as `d696940`).
+- Site URL: `https://getinstabid.pro/`.
+- Kit: `templates/ainexa-ai-agency`.
+- Brand colors on the wire: scrape-derived `design_tokens.colors.accent = #00D4FF` (cyan, ×18 on `instabid.pro` source). Original TEA-756 brief listed `primary: #1B4D7A` + `accent: #E8622D` (navy/orange); the board correction in comment `783c9576` reset that to scrape-first DNA, so the navy/orange spec is the documented InstaBid brand identity but the deployed accent is the cyan extracted from `instabid.pro`. Ainexa kit's white-on-dark `primary/secondary/text` left at template defaults.
+- Vision score: 58/100 FAIL — accepted as v0.1 baseline. v4 score 42 was a regression caused by a mis-targeted CSS selector on `.elementor-location-header .elementor-widget-button`; the revert removes that delta.
+- Deploy response shape verified: engine-shape JSON, HTTP 207, ≠ HTML, ≠ 4xx, ≠ 130s timeout.
+
+**Parked items (intentionally NOT spawned as Paperclip child issues per Commander e30980ed):**
+1. Engine Issue #11 — `purge_placeholder_images` (engine L1436) broadcasts one stock image; `image_ids.service:0` and `image_ids.logo:0` reproduce every deploy. Lives in `webprinter-engine-v5.2-gold.php` — gated. Owned at the WebPrinter2.0 GitHub product layer with Commander triage on TEA-475 AM brief.
+2. Ainexa template body mismatch — kit ships an AI-agency hero/headline structure (animated-headline placeholder, INTRODUCING repeater, image-box wordmark in nav, double-rendered tagline on /about/) that does not match contractor-SaaS marketing. Future contractor deploys should consider a different template; SaaS-v1 has its own tokenization gaps (TEA-761 backlog). Lives as a template-strategy decision in WebPrinter2.0, not a Paperclip ticket.
+3. Issue #5 (DigitalOcean ASN bot-wall on getinstabid.pro) — dropped per board comment `ed99c4ed` ("CDN is off. Litespeed cache is off. We're beating a dead horse"). Direct curl from a residential IP works for all current and future cold-starts.
+
+Wake 2 firecrawl migration findings and Wake 3 ainexa redeploy findings preserved below.
 
 ---
 
@@ -227,3 +242,42 @@ InstaBid current state: home + about render WITHOUT overflow, WITHOUT counter co
 3. Switch InstaBid template (ainexa is AI-agency, not contractor-SaaS).
 
 Branch `wp-pilot/tea756-v4-kit-cleanup` merged. Main = `adfabb65`. Revert to v3 = single PUT on kit.json.
+
+---
+
+## Wake 5 — TEA-756 close, Path 1 (2026-05-12, WP Pilot)
+
+Commander direction (comment `e30980ed`): **Path 1 — ship v3 as v0.1 cold-start baseline.** Engine Issue #11 + ainexa template body mismatch parked as WebPrinter2.0 GitHub product items (not Paperclip execution tickets). Path 2 (engine fix) + Path 3 (template switch) deferred to their own decision cycles.
+
+**Revert path (branch-first per AGENTS.md rule #6):**
+- Branch `wp-pilot/tea756-v4-revert` off `main`, single `git revert adfabb6` reversing the v4 squash.
+- PR `#5` opened + squash-merged as commit `d696940`. Net diff = one line in `templates/ainexa-ai-agency/kit.json` `custom_css` (the v4 stray-suffix + header-CTA rules removed; everything from v1 + v2 cleanup + v3 revert preserved).
+- `raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/ainexa-ai-agency/kit.json` confirmed serving v3-state CSS within seconds.
+
+**Re-deploy (direct curl from this Mac, residential IP):**
+- Same payload structure as Wake 3: `template: ainexa-ai-agency`, `brand_mode: client`, `design_tokens.colors.accent: #00D4FF` (scraped from `instabid.pro`), `blog_id: 1`, 6 services, hero/about GitHub-raw SaaS imagery.
+- Engine response: **HTTP 207 in 4.4s**, body `{success:false, blog_id:1, template:"ainexa-ai-agency", company:"InstaBid", updated:{home,about,services,quote,contact,footer}, errors:{header:"Template returned HTTP 404"}, image_ids:{hero:139, about:138, service:0, logo:0}, version:"5.2"}`. `success:false` = solely `header.json` 404 (Issue #3, unchanged). All 5 pages + footer updated.
+
+**Live verification:**
+- `GET /wp-json/webprinter/v1/health` → 200, `{"status":"ok","version":"5.2","ts":1778623839}`.
+- `GET /` → 200, `<title>InstaBid</title>`, 12 `InstaBid` mentions; 0 occurrences of `Probe / AiNexa / Imbo / Linear / #5e6ad2`.
+- `GET /about/` → 200, `<title>About – InstaBid</title>`; same leak scan = 0.
+- Per-post Elementor kit CSS `post-8.css` confirmed serving v3 baseline rules — `overflow-x: hidden` ✅, `max-width: 240px` (CTA pill cap) ✅, `border-radius: 999px` ✅, `.elementor-widget-counter { display: none }` ✅. v4 selectors `.elementor-widget-counter + .elementor-widget-heading` and `[data-elementor-type="header"] .elementor-widget-button` ✅ absent.
+
+**v0.1 cold-start baseline — locked-in fields:**
+| Field | Value |
+|---|---|
+| Site URL | `https://getinstabid.pro/` |
+| Kit (template) | `templates/ainexa-ai-agency` |
+| Brand mode | `client` |
+| Brand colors on the wire | `design_tokens.colors.accent: #00D4FF` (scraped cyan); kit primary/secondary/text at defaults |
+| Brand colors per InstaBid spec | navy `#1B4D7A` + orange `#E8622D` (cold-start brief; superseded by board-corrected scrape-first direction) |
+| Vision QA score | 58/100 FAIL — accepted as baseline (re-QA out of Path 1 scope) |
+| Commit (kit content) | `94fa1353` content restored on `main` via revert PR #5 = `d696940` |
+
+**Parked items (NOT spawned as Paperclip child issues per Commander `e30980ed`):**
+- Engine Issue #11 (`purge_placeholder_images` broadcast). Plugin gate. Commander triage on TEA-475 AM brief.
+- Ainexa template body mismatch (animated-headline placeholder, INTRODUCING repeater, duplicate brand mark, double-rendered tagline on `/about/`). Template strategy decision, not a one-shot fix. WebPrinter2.0 GitHub-side product question.
+- DigitalOcean ASN bot-wall (was Issue #5) — dropped per board comment `ed99c4ed`. Direct curl from a non-DO IP works.
+
+TEA-756 closed as `done`.
