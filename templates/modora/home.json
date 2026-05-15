@@ -89,7 +89,8 @@
           "size": "",
           "alt": "Blue classic interior with elegant furniture",
           "source": "library"
-        }
+        },
+        "_wp_img": "hero"
       },
       "elements": [
         {
@@ -553,7 +554,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Interior Expertise With Artistic Vision",
-                    "description_text": "At ridiculus tincidunt habitasse gravida rhoncus dolor litora maximus sem",
+                    "description_text": "",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",
@@ -655,7 +656,7 @@
             {
               "id": "854b6bf",
               "settings": {
-                "title": "Nam cras lorem at cursus placerat. Posuere porta enim tempor taciti proin vehicula eu consectetuer eros vivamus sed. Congue sociosqu nisi urna nunc faucibus. Orci efficitur dictum tempor dignissim commodo tempus aliquam erat nostra maecenas.",
+                "title": "",
                 "header_size": "div",
                 "__globals__": {
                   "typography_typography": "globals/typography?id=b2ce6af"
@@ -676,7 +677,7 @@
                 "view": "stacked",
                 "shape": "square",
                 "title_text": "Creating Inspired Interior Living Spaces",
-                "description_text": "Himenaeos penatibus suscipit turpis sollicitudin blandit ipsum vitae tempus curabitur",
+                "description_text": "",
                 "title_size": "div",
                 "position": "left",
                 "position_mobile": "left",
@@ -2776,9 +2777,7 @@
               "id": "235706dd",
               "settings": {
                 "title": "{{services._item.name}}",
-                "header_size": "h6",
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                "header_size": "h6"
               },
               "elements": [],
               "isInner": false,
@@ -3211,9 +3210,7 @@
                 "header_size": "h6",
                 "align": "center",
                 "_animation": "fadeInUp",
-                "_animation_delay": 200,
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                "_animation_delay": 200
               },
               "elements": [],
               "isInner": false,
@@ -3385,8 +3382,8 @@
                           "value": "",
                           "library": ""
                         },
-                        "title_text": "Residential Design",
-                        "description_text": "Nostra rhoncus aliquet conubia curae pede suscipit bibendum lacus arcu amet faucibus",
+                        "title_text": "{{services._item.name}}",
+                        "description_text": "{{services._item.description}}",
                         "title_size": "div",
                         "text_align": "left",
                         "title_bottom_space": {
@@ -3574,7 +3571,7 @@
             {
               "id": "1b55c7b4",
               "settings": {
-                "title": "Duis pulvinar dis primis senectus id parturient imperdiet sollicitudin ullamcorper vestibulum consequat",
+                "title": "",
                 "header_size": "div",
                 "_animation": "fadeInUp",
                 "_animation_delay": 200,
@@ -4195,7 +4192,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Tailored Designs That Reflect Your Unique Lifestyle",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -4257,7 +4254,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Transparent Pricing With No Hidden Fees",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -4319,7 +4316,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "High-Quality Materials and Trusted Craftsmanship",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -4381,7 +4378,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Sustainable and Responsible Design Choices",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -4547,34 +4544,34 @@
             "content_width": "full",
             "ekit_accordion_items": [
               {
-                "acc_title": "Sem sollicitudin placerat taciti venenatis urna ullamcorper?",
+                "acc_title": "",
                 "ekit_acc_is_active": "yes",
                 "_id": "1a88614",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Risus penatibus aenean blandit erat lorem arcu?",
+                "acc_title": "",
                 "_id": "6968ba2",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Nullam gravida justo morbi platea iaculis arcu?",
+                "acc_title": "",
                 "_id": "90c953c",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Quam nostra ullamcorper neque nunc est nec?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_title": "",
+                "acc_content": "",
                 "_id": "320906d"
               },
               {
                 "acc_title": "Sociosqu cras sodales nec ligula accumsan iaculis lectus?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_content": "",
                 "_id": "1ed5190"
               },
               {
-                "acc_title": "Hac fames nec elit cras condimentum tempor tortor?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_title": "",
+                "acc_content": "",
                 "_id": "e395ef9"
               }
             ],
