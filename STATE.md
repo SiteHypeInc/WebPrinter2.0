@@ -308,3 +308,89 @@ Commander direction (comment `e30980ed`): **Path 1 — ship v3 as v0.1 cold-star
 - DigitalOcean ASN bot-wall (was Issue #5) — dropped per board comment `ed99c4ed`. Direct curl from a non-DO IP works.
 
 TEA-756 closed as `done`.
+
+---
+
+## TEA-792 Wake 3 — Modora marker pass + direct deploy (2026-05-15, WP Pilot)
+
+Johnny-approved fix plan (TEA-792 comment `30f54599` + answers `cc5f5637`): execute A–H marker pass, defer E/F behind `_wp_if` hide gates, push + redeploy + re-score.
+
+**Templates pushed (`b7fface` on `main`, 5 files / +281 / −2114):**
+- `home.json` — added real `widgetType:"button"` widget in hero (`root/0/0/0`) with `{{cta.primary_text}}` + link to `/quote/`; `_wp_if:"faqs"` on `root/9`; `_wp_if:"stats"` on `root/4`
+- `about.json` — `_wp_if:"team"` on `root/5`; `_wp_repeat:"team"` (max 8) on `root/5/1/0` with `{{team._item.name}}` / `{{team._item.title}}` tokens on the per-card icon-box + elementskit-team widget; 3 dummy team cards deleted; `_wp_if:"stats"` on `root/4`
+- `services.json` — deleted dead duplicate cards at `root/0`, `root/1`, `root/3` (1783-line drop); `_wp_if:"faqs"` on FAQ section; `_wp_if:"stats"` on stats section
+- `contact.json` — `_wp_if:"contact.address.street"` / `"contact.phone"` / `"contact.email"` on three icon-box containers (`root/3/1/0,1,2`); Office Hour (`root/3/1/3`) kept static
+- `footer.json` — `_wp_if:"contact.address.street"` on address heading; `_wp_if:"contact.phone"` on phone/email icon-list
+
+Open-questions resolution from Johnny comment `cc5f5637`:
+- FAQs → `_wp_if` hide only (no schema add, no normalizer extraction yet)
+- Stats → `_wp_if` hide only (no fake numbers)
+- Service cards → deleted the 3 duplicates (preferred path)
+- Elementor Pro → deferred; flag any widgets that hard-require it
+
+**Pre-deploy housekeeping:**
+- Plugin rolled from `5.3-candidate` back to `webprinter-engine-v5.2-gold` on `webprinter-test`. `GET /wp-json/webprinter/v1/health` → `{"status":"ok","version":"5.2","ts":1778827619}` ✅
+- Step 2 (Firecrawl HTTP-revert) confirmed **no-op**: pulled gold `A6naBMqLH3eRDzjx` and wp-pilot `tLIE3cHlwWF97FRD` from n8n API — both 12 nodes, both use `n8n-nodes-firecrawl.fireCrawl` v1. Live gold already converged on the native node; reverting wp-pilot would have made it deviate from gold.
+
+**Deploy mechanism — wp-pilot webhook fails on Hostinger bot-wall, direct curl works.**
+- First webhook fire used `source_url` field → Firecrawl node returned 400 (it reads `body.url`, not `body.source_url`). Execution 1148, 1149 errored at Firecrawl.
+- Second webhook fire with `{"url":"https://bethebesthome.com/"}` ran for 55s and reached Deploy — failed at "Deploy Response Check" with the Hostinger hCDN bot-wall HTML challenge (Issue #5 / known per `SKILL.md:170-175`). Execution 1150.
+- **Workaround per `SKILL.md:173`**: pulled the Claude-normalized payload from execution 1150 result data, rebuilt the deploy body locally using the same logic the n8n Deploy node uses (template override `modora`, trade `home-improvement` → `blog_id:1`), and POSTed directly from this Mac (residential IP):
+  ```
+  POST $WP_TEST_URL/wp-json/webprinter/v1/deploy
+  → HTTP 200 in 6.4s
+  → {"success":true,"blog_id":1,"template":"modora","company":"Kathryn Emery",
+     "updated":{home,about,services,quote,contact,header:"updated",footer:"updated"},
+     "errors":[],"image_ids":{"hero":155,"about":156,"service":0,"logo":0,"gallery_0":158,"gallery_1":160,"gallery_2":161},"version":"5.2"}
+  ```
+
+**Marker-gate verification on deployed HTML (curl + grep):**
+| Page | Check | Before A–H | After A–H |
+|---|---|---|---|
+| home | `40K+\|52K+\|25+` stat strings | 3 hits | **0** ✅ |
+| home | "Common Questions" FAQ heading | 1 hit | **0** ✅ |
+| home | Newsletter section | present | present ✅ |
+| home | `Kathryn Emery` business name | populated | 8 hits ✅ |
+| about | "Meet Our team" heading | 1 hit | **0** ✅ |
+| about | Dummy team names (Nicholas Thomas / Co-Founder / Designer) | present | **0** ✅ |
+| about | Stats `40K+\|52K+\|25+` | present | **0** ✅ |
+| services | "Common Questions" FAQ | 1 hit | **0** ✅ |
+| services | Dead `{{services._item.name}}` cards | rendered | **0** (sections removed) ✅ |
+| services | Stats | present | **0** ✅ |
+| contact | "Head Office" icon-box | 1 hit | **0** ✅ |
+| contact | "Let's Talk" (phone) | 1 hit | **0** ✅ |
+| contact | "Email Support" | 1 hit | **0** ✅ |
+| contact | "Office Hour" | 1 hit | 1 hit ✅ (kept static) |
+
+All 8 marker changes (A through H) verified working at the plugin/template layer.
+
+**Vision QA score (Claude Sonnet 4.6 via OpenRouter, desktop 1440×4000 headless Chrome screenshots):**
+
+| Page | Wake 2 | This wake | Δ | Status |
+|---|---:|---:|---:|---|
+| home | **52** | **67** | **+15** | FAIL → REVIEW |
+| about | — | 38 | — | FAIL |
+| services | — | 58 | — | FAIL |
+| contact | — | 34 | — | FAIL |
+| **avg of 4** | — | **49.25** | — | FAIL |
+
+Home jumped 52 → 67 (the marker pass directly closes the structural deltas Vision flagged on Wake 2: dummy stats, FAQ placeholder copy, missing CTA affordance). Still below the ≥80 PASS standing rule.
+
+**Residual gaps Vision called out (driving the 13 remaining home points + the lower other-page scores):**
+1. **Hero CTA token resolves to empty string.** Payload `cta.primary_text=""` from the normalizer — bethebesthome's site has no explicit CTA copy. The button widget is in the DOM but renders blank → Vision scores it as "no CTA above fold." Normalizer fix, not a template fix.
+2. **Auto-purge stock images are wrong context.** `_wp_stock` resolves through `general.generic` because `industry` came in as `null` (forced to `home-improvement` at the deploy node; trade isn't in `general.category` so falls to generic). The Pexels query is generic-office, not interior-design. Stock-manifest gap.
+3. **Static Modora hero heading `Interior Design`.** `home.json` `root/0/0/0/0` is the Modora demo headline — not tokenized in any prior pass. This belongs on the next prep pass as `{{tagline}}` or `{{about_short.headline}}`.
+4. **Contact-page hero subtitle still Modora copy** (`"Start the conversation to established good relationship and business."` in `contact.json` hero) — same prep-pass gap.
+5. **Contact-page layout gap.** With three icon-boxes gated and only `Office Hour` left, the 4-column row leaves 75% empty space. Need a parent-level `_wp_if` on the whole `root/3/1` group, OR collapse to 1-col when only Hours is present.
+6. **Sparse-payload pages (about/services/contact) score low simply because the source site doesn't supply the data those pages were built around** (team, testimonials, multiple services, contact info). Template can only hide; the rest is a content-availability ceiling for this specific source.
+
+**SnapRender decision gate (TEA-792 step 6, gates TEA-760):**
+Screenshot quality from headless Chrome residential IP is adequate for QA scoring — Vision rendered useful, granular feedback. **No SnapRender swap needed for this kit.** TEA-760 recommendation: **cancel** unless re-prioritized by a separate signal.
+
+**Open follow-ups (NOT pushed, awaiting Johnny review):**
+- Hero/contact-hero static-heading tokenization (3rd prep pass)
+- Contact icon-box parent group `_wp_if` to fix layout gap
+- Normalizer: ensure `cta.primary_text` has a sensible default ("Get a free consultation" etc.) when scrape returns empty
+- Stock manifest: add `home-improvement` / `interior-design` categories with relevant Pexels URLs
+
+**Commit / branch:** `templates/modora/*` on `main` via direct commit `b7fface`. STATE.md update will be a separate commit.
