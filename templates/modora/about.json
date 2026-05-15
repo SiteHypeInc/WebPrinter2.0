@@ -87,7 +87,8 @@
         "__globals__": {
           "background_overlay_color": "globals/colors?id=638d055",
           "background_color": "globals/colors?id=638d055"
-        }
+        },
+        "_wp_stock": "hero"
       },
       "elements": [
         {
@@ -910,7 +911,8 @@
         },
         "background_background": "classic",
         "flex_align_items": "center",
-        "border_color": "#FFFFFF2B"
+        "border_color": "#FFFFFF2B",
+        "_wp_if": "brands"
       },
       "elements": [
         {
@@ -2852,7 +2854,8 @@
         },
         "__globals__": {
           "background_overlay_color": "globals/colors?id=638d055"
-        }
+        },
+        "_wp_stock": "hero"
       },
       "elements": [
         {
