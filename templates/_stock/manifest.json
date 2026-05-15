@@ -102,5 +102,37 @@
       "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-01.jpg?v=20260511",
       "https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates/_stock/saas/generic/saas-generic-02.jpg?v=20260511"
     ]
+  },
+  "interior-design": {
+    "hero": [
+      "https://images.pexels.com/photos/1909752/pexels-photo-1909752.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080",
+      "https://images.pexels.com/photos/1510173/pexels-photo-1510173.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080",
+      "https://images.pexels.com/photos/34538288/pexels-photo-34538288.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080",
+      "https://images.pexels.com/photos/3701434/pexels-photo-3701434.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080"
+    ],
+    "action": [
+      "https://images.pexels.com/photos/4977460/pexels-photo-4977460.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800",
+      "https://images.pexels.com/photos/6614788/pexels-photo-6614788.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800"
+    ],
+    "generic": [
+      "https://images.pexels.com/photos/14614673/pexels-photo-14614673.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800",
+      "https://images.pexels.com/photos/7546314/pexels-photo-7546314.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800"
+    ]
+  },
+  "home-improvement": {
+    "hero": [
+      "https://images.pexels.com/photos/5353881/pexels-photo-5353881.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080",
+      "https://images.pexels.com/photos/36511371/pexels-photo-36511371.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080",
+      "https://images.pexels.com/photos/10827337/pexels-photo-10827337.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080"
+    ],
+    "action": [
+      "https://images.pexels.com/photos/28885519/pexels-photo-28885519.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800",
+      "https://images.pexels.com/photos/3990359/pexels-photo-3990359.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800",
+      "https://images.pexels.com/photos/6566822/pexels-photo-6566822.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800"
+    ],
+    "generic": [
+      "https://images.pexels.com/photos/36035072/pexels-photo-36035072.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800",
+      "https://images.pexels.com/photos/28456461/pexels-photo-28456461.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800"
+    ]
   }
 }

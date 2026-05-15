@@ -187,7 +187,7 @@
                 {
                   "id": "3b9b05a6",
                   "settings": {
-                    "title": "Interior Design",
+                    "title": "{{tagline}}",
                     "header_size": "h1",
                     "align": "center",
                     "_animation": "fadeInDown",

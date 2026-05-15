@@ -180,7 +180,15 @@
                   "title": "[elementor-tag id=\"7844cfc\" name=\"post-title\" settings=\"%7B%7D\"]"
                 }
               },
-              "elements": [],
+              "elements": [
+                null,
+                null,
+                {
+                  "settings": {
+                    "title": "{{about_short}}"
+                  }
+                }
+              ],
               "isInner": false,
               "widgetType": "heading",
               "elType": "widget"
@@ -326,6 +334,17 @@
           ],
           "isInner": true,
           "elType": "container"
+        },
+        null,
+        {
+          "elements": [
+            null,
+            {
+              "settings": {
+                "_wp_if": "contact.phone"
+              }
+            }
+          ]
         }
       ],
       "isInner": false,
