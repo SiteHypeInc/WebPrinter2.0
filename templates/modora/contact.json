@@ -874,7 +874,8 @@
                 "__globals__": {
                   "background_color": "",
                   "border_color": "globals/colors?id=4d462f5"
-                }
+                },
+                "_wp_if": "contact.address.street"
               },
               "elements": [
                 {
@@ -982,7 +983,8 @@
                 "__globals__": {
                   "background_color": "globals/colors?id=044b931",
                   "border_color": "globals/colors?id=044b931"
-                }
+                },
+                "_wp_if": "contact.phone"
               },
               "elements": [
                 {
@@ -1091,7 +1093,8 @@
                 "__globals__": {
                   "background_color": "",
                   "border_color": "globals/colors?id=4d462f5"
-                }
+                },
+                "_wp_if": "contact.email"
               },
               "elements": [
                 {

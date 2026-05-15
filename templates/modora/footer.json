@@ -362,7 +362,8 @@
                 "__globals__": {
                   "title_color": "globals/colors?id=primary",
                   "typography_typography": "globals/typography?id=b2ce6af"
-                }
+                },
+                "_wp_if": "contact.address.street"
               },
               "elements": [],
               "isInner": false,
@@ -512,7 +513,8 @@
                 "__globals__": {
                   "icon_color": "globals/colors?id=3ee16e7",
                   "icon_typography_typography": "globals/typography?id=b2ce6af"
-                }
+                },
+                "_wp_if": "contact.phone"
               },
               "elements": [],
               "isInner": false,

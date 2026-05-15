@@ -272,6 +272,34 @@
                   "isInner": false,
                   "widgetType": "divider",
                   "elType": "widget"
+                },
+                {
+                  "id": "b5aed83",
+                  "elType": "widget",
+                  "widgetType": "button",
+                  "settings": {
+                    "text": "{{cta.primary_text}}",
+                    "link": {
+                      "url": "/quote/",
+                      "is_external": "",
+                      "nofollow": ""
+                    },
+                    "align": "left",
+                    "size": "lg",
+                    "button_text_color": "#FFFFFF",
+                    "background_color": "#332724",
+                    "hover_animation": "shrink",
+                    "button_box_shadow_button_box_shadow_type": "yes",
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "4",
+                      "right": "4",
+                      "bottom": "4",
+                      "left": "4",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": []
                 }
               ],
               "isInner": true,
@@ -1921,7 +1949,8 @@
         "presetIcon": "eicon-container-grid",
         "__globals__": {
           "border_color": "globals/colors?id=4d462f5"
-        }
+        },
+        "_wp_if": "stats"
       },
       "elements": [
         {
@@ -4474,7 +4503,8 @@
           "bottom": "1",
           "left": "1",
           "isLinked": false
-        }
+        },
+        "_wp_if": "faqs"
       },
       "elements": [
         {
