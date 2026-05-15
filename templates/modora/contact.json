@@ -542,7 +542,7 @@
             {
               "id": "4c1b56bf",
               "settings": {
-                "title": "Sem facilisis urna vestibulum vivamus habitasse augue aliquet imperdiet magna cursus curabitur placerat volutpat",
+                "title": "",
                 "header_size": "div",
                 "__globals__": {
                   "typography_typography": "globals/typography?id=b2ce6af"
@@ -885,7 +885,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Head Office",
-                    "description_text": "Jln Cempaka Wangi No 22 </br>\nJakarta - Indonesia",
+                    "description_text": "{{contact.address.street}}<br>{{contact.address.city}}, {{contact.address.state}}",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",
@@ -993,7 +993,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Let's Talk",
-                    "description_text": "Phone : {{contact.phone}}.2002.2012 </br>\nFax : {{contact.phone}}.2002.2013",
+                    "description_text": "Phone: {{contact.phone}}",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",
@@ -1102,7 +1102,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Email Support",
-                    "description_text": "support@yourdomain.tld </br>\nhello@yourdomain.tld",
+                    "description_text": "{{contact.email}}",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",
@@ -1210,7 +1210,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Office Hour",
-                    "description_text": "Monday - Saturday </br>\n08.00 - 17.00",
+                    "description_text": "Monday - Friday<br>9:00 AM - 5:00 PM",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",

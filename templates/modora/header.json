@@ -296,6 +296,17 @@
               "isInner": false,
               "widgetType": "image",
               "elType": "widget"
+            },
+            {
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "{{business_name}}",
+                "header_size": "h4",
+                "align": "left",
+                "_element_custom_width": "initial",
+                "_css_classes": "wp-business-name"
+              }
             }
           ],
           "isInner": true,

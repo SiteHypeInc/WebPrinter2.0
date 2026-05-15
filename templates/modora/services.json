@@ -178,9 +178,7 @@
                 },
                 "__dynamic__": {
                   "title": "[elementor-tag id=\"7844cfc\" name=\"post-title\" settings=\"%7B%7D\"]"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -254,9 +252,7 @@
                 },
                 "__dynamic__": {
                   "link": "[elementor-tag id=\"9f3e5c3\" name=\"site-url\" settings=\"%7B%7D\"]"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -633,9 +629,7 @@
               "id": "10648cb2",
               "settings": {
                 "title": "{{services._item.name}}",
-                "header_size": "h6",
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                "header_size": "h6"
               },
               "elements": [],
               "isInner": false,
@@ -1068,9 +1062,7 @@
                 "header_size": "h6",
                 "align": "center",
                 "_animation": "fadeInUp",
-                "_animation_delay": 200,
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                "_animation_delay": 200
               },
               "elements": [],
               "isInner": false,
@@ -1242,8 +1234,8 @@
                           "value": "",
                           "library": ""
                         },
-                        "title_text": "Residential Design",
-                        "description_text": "Nostra rhoncus aliquet conubia curae pede suscipit bibendum lacus arcu amet faucibus",
+                        "title_text": "{{services._item.name}}",
+                        "description_text": "{{services._item.description}}",
                         "title_size": "div",
                         "text_align": "left",
                         "title_bottom_space": {
@@ -1434,9 +1426,7 @@
                 "header_size": "h3",
                 "__globals__": {
                   "title_color": "globals/colors?id=text"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -1518,9 +1508,7 @@
                 "header_size": "h3",
                 "__globals__": {
                   "title_color": "globals/colors?id=text"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -1609,9 +1597,7 @@
                 "header_size": "h3",
                 "__globals__": {
                   "title_color": "globals/colors?id=text"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -1693,9 +1679,7 @@
                 "header_size": "h3",
                 "__globals__": {
                   "title_color": "globals/colors?id=text"
-                },
-                "_wp_repeat": "services",
-                "_wp_repeat_max": 8
+                }
               },
               "elements": [],
               "isInner": false,
@@ -2291,7 +2275,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Tailored Designs That Reflect Your Unique Lifestyle",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -2353,7 +2337,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Transparent Pricing With No Hidden Fees",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -2415,7 +2399,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "High-Quality Materials and Trusted Craftsmanship",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -2477,7 +2461,7 @@
                     "view": "stacked",
                     "shape": "square",
                     "title_text": "Sustainable and Responsible Design Choices",
-                    "description_text": "Venenatis duis fames metus condimentum aliquet odio lacus cubilia luctus est suspendisse",
+                    "description_text": "",
                     "title_size": "div",
                     "position": "left",
                     "position_mobile": "left",
@@ -3196,34 +3180,34 @@
             "content_width": "full",
             "ekit_accordion_items": [
               {
-                "acc_title": "Sem sollicitudin placerat taciti venenatis urna ullamcorper?",
+                "acc_title": "",
                 "ekit_acc_is_active": "yes",
                 "_id": "1a88614",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Risus penatibus aenean blandit erat lorem arcu?",
+                "acc_title": "",
                 "_id": "6968ba2",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Nullam gravida justo morbi platea iaculis arcu?",
+                "acc_title": "",
                 "_id": "90c953c",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>"
+                "acc_content": ""
               },
               {
-                "acc_title": "Quam nostra ullamcorper neque nunc est nec?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_title": "",
+                "acc_content": "",
                 "_id": "320906d"
               },
               {
                 "acc_title": "Sociosqu cras sodales nec ligula accumsan iaculis lectus?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_content": "",
                 "_id": "1ed5190"
               },
               {
-                "acc_title": "Hac fames nec elit cras condimentum tempor tortor?",
-                "acc_content": "<p>Proin odio libero orci lorem fusce a luctus. Eleifend laoreet cursus potenti nibh interdum venenatis in tempor sociosqu ultricies lacus. Consectetur eget magna lacus mollis odio pellentesque a risus nam.</p>",
+                "acc_title": "",
+                "acc_content": "",
                 "_id": "e395ef9"
               }
             ],

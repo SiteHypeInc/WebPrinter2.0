@@ -600,7 +600,7 @@
                       "library": "ekiticons"
                     },
                     "title_text": "Interior Expertise With Artistic Vision",
-                    "description_text": "At ridiculus tincidunt habitasse gravida rhoncus dolor litora maximus sem",
+                    "description_text": "",
                     "title_size": "div",
                     "icon_space": {
                       "unit": "px",
@@ -702,7 +702,7 @@
             {
               "id": "2fba031f",
               "settings": {
-                "title": "Nam cras lorem at cursus placerat. Posuere porta enim tempor taciti proin vehicula eu consectetuer eros vivamus sed. Congue sociosqu nisi urna nunc faucibus. Orci efficitur dictum tempor dignissim commodo tempus aliquam erat nostra maecenas.",
+                "title": "",
                 "header_size": "div",
                 "__globals__": {
                   "typography_typography": "globals/typography?id=b2ce6af"
@@ -723,7 +723,7 @@
                 "view": "stacked",
                 "shape": "square",
                 "title_text": "Creating Inspired Interior Living Spaces",
-                "description_text": "Himenaeos penatibus suscipit turpis sollicitudin blandit ipsum vitae tempus curabitur",
+                "description_text": "",
                 "title_size": "div",
                 "position": "left",
                 "position_mobile": "left",
@@ -1063,7 +1063,8 @@
                   "size": 1,
                   "sizes": []
                 },
-                "_wp_stock": "generic"
+                "_wp_stock": "generic",
+                "_wp_img": "about"
               },
               "elements": [],
               "isInner": false,
