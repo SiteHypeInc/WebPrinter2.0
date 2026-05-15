@@ -137,7 +137,7 @@
             {
               "id": "1aaf493f",
               "settings": {
-                "title": "Text",
+                "title": "Our Story",
                 "header_size": "div",
                 "align": "center",
                 "_position": "absolute",
@@ -189,7 +189,7 @@
             {
               "id": "7890212e",
               "settings": {
-                "title": "Text",
+                "title": "{{tagline}}",
                 "header_size": "h1",
                 "align": "center",
                 "_animation": "fadeInDown",
@@ -299,7 +299,7 @@
             {
               "id": "51c8e117",
               "settings": {
-                "title": "Text",
+                "title": "About",
                 "header_size": "h6",
                 "title_color": "#FFFFFF",
                 "_padding": {
