@@ -196,13 +196,21 @@ class WebPrinter_Engine {
         // -----------------------------------------------------------
         // 3a. BLOG NAME + FRONT PAGE
         // -----------------------------------------------------------
-        // Unhook Elementor Kit Manager — it fires on updated_option and
-        // throws "Access denied" in REST context (no nonce/ajax caps).
+        // Unhook Elementor Kit Manager — it fires on update_option_blogname
+        // (option-name-specific) and throws "Access denied" in REST context.
         global $wp_filter;
-        $saved_updated_option = null;
-        if ( isset( $wp_filter['updated_option'] ) ) {
-            $saved_updated_option = clone $wp_filter['updated_option'];
-            remove_all_filters( 'updated_option' );
+        $hooks_to_strip = [
+            'updated_option',
+            'update_option_blogname',
+            'update_option_show_on_front',
+            'update_option_page_on_front',
+        ];
+        $saved_hooks = [];
+        foreach ( $hooks_to_strip as $hook ) {
+            if ( isset( $wp_filter[ $hook ] ) ) {
+                $saved_hooks[ $hook ] = clone $wp_filter[ $hook ];
+                remove_all_filters( $hook );
+            }
         }
 
         $business_name = sanitize_text_field( $this->resolve( 'business_name' ) );
@@ -214,9 +222,8 @@ class WebPrinter_Engine {
             update_option( 'page_on_front', $home_page->ID );
         }
 
-        // Restore hooks.
-        if ( $saved_updated_option ) {
-            $wp_filter['updated_option'] = $saved_updated_option;
+        foreach ( $saved_hooks as $hook => $obj ) {
+            $wp_filter[ $hook ] = $obj;
         }
 
         // -----------------------------------------------------------
