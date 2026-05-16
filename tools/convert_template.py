@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-WebPrinter Template Converter v1.0
+WebPrinter Template Converter v2.0 — Aggressive Tokenization
 Scans raw Elementor JSON and applies v5.2 markers automatically.
+
+v2 change: every `heading` and `text-editor` widget is replaced with a token
+unless its text is on the SECTION_LABELS whitelist. Token choice depends on
+section context (hero/about/services/testimonials/contact/pricing/unknown)
+and on whether the widget sits inside a `_wp_repeat` card.
 
 Usage:
   python3 convert_template.py input.json > output.json
   python3 convert_template.py input.json --report  # Show section mapping without converting
+  python3 convert_template.py input.json --audit   # Convert, then report any non-label heading/text-editor that still contains literal text
 """
 
 import json
@@ -13,30 +19,107 @@ import sys
 import copy
 import re
 from collections import defaultdict
+import html as _html
 
-# ─── Content schema field patterns ───────────────────────────────────────
-# These map common placeholder text patterns to WebPrinter tokens
 
-HEADING_PATTERNS = [
-    # Hero / tagline patterns
-    (r'(?i)(innovation|creative|solution|agency|company|business|professional|welcome|we are|we\'re)', '{{tagline}}', 'hero'),
-    # About patterns
-    (r'(?i)(about|who we are|our story|our company|our history)', 'SECTION_LABEL', 'about_label'),
-    (r'(?i)(showcasing|our mission|what we do|our approach)', '{{tagline}}', 'about_heading'),
-    # Services / features patterns
-    (r'(?i)(features|services|what we offer|our services|capabilities)', 'SECTION_LABEL', 'services_label'),
+# ─── Section labels (kept as-is, NOT tokenized) ──────────────────────────
+# Lowercased, HTML-stripped, punctuation-stripped. Match is exact.
+SECTION_LABELS = {
+    # About
+    'about', 'about us', 'who we are', 'our story', 'our company', 'our history',
+    'our mission', 'our vision', 'why us', 'why choose us',
+    # Services / features
+    'services', 'our services', 'what we offer', 'what we do', 'features',
+    'capabilities', 'our value', 'our values', 'solutions', 'expertise',
     # Testimonials
-    (r'(?i)(testimonial|review|client|trusted|what .* say|voices)', 'SECTION_LABEL', 'testimonials_label'),
+    'testimonials', 'reviews', 'what our clients say', 'what people say',
+    'trusted voices', 'client testimonials', 'customer reviews', 'voices',
+    'happy clients', 'happy customers',
     # Pricing
-    (r'(?i)(pricing|plans?|packages?)', 'SECTION_LABEL', 'pricing_label'),
-    # CTA
-    (r'(?i)(contact|get in touch|reach out|let\'s talk|get started|ready)', 'SECTION_LABEL', 'cta_label'),
-]
+    'pricing', 'plans', 'packages', 'our pricing', 'price',
+    # Process
+    'process', 'how it works', 'our process', '3 simple steps', 'simple steps',
+    'steps', 'workflow',
+    # Contact / CTA
+    'contact', 'contact us', 'get in touch', 'reach out', "let's talk",
+    "let's get started", 'ready', 'get started', 'cta', 'lets talk',
+    'lets get started',
+    # FAQ
+    'faq', 'faqs', 'frequently asked questions', 'questions',
+    # Team
+    'team', 'our team', 'meet the team', 'our experts', 'experts',
+    # Blog / News
+    'blog', 'articles', 'news', 'insights', 'latest news', 'latest articles',
+    # Gallery / Portfolio
+    'gallery', 'portfolio', 'projects', 'case studies', 'our projects',
+    'our work', 'work', 'recent work', 'latest projects',
+    # Credentials
+    'credentials', 'awards', 'certifications', 'partners', 'trusted by',
+    'clients',
+    # Generic UI labels (often used as eyebrow text inside cards)
+    'new', 'popular', 'best', 'top', 'free', 'premium',
+}
 
-TEXT_PATTERNS = [
-    (r'(?i)lorem ipsum', '{{about_long}}'),
-    (r'(?i)dolor sit amet', '{{about_long}}'),
-]
+
+HEADING_TOKEN_BY_SECTION = {
+    'hero': '{{tagline}}',
+    'about': '{{tagline}}',
+    'services': '{{tagline}}',
+    'testimonials': '{{tagline}}',
+    'pricing': '{{tagline}}',
+    'contact': '{{cta.primary_text}}',
+    'unknown': '{{tagline}}',
+}
+
+TEXT_TOKEN_BY_SECTION = {
+    'hero': '{{about_short}}',
+    'about': '{{about_long}}',
+    'services': '{{about_short}}',
+    'testimonials': '{{about_short}}',
+    'pricing': '{{about_short}}',
+    'contact': '{{about_short}}',
+    'unknown': '{{about_short}}',
+}
+
+
+def normalize_text(raw):
+    """Strip HTML, unescape entities, lowercase, collapse whitespace + punctuation."""
+    if not raw or not isinstance(raw, str):
+        return ''
+    t = _html.unescape(raw)
+    t = re.sub(r'<[^>]+>', ' ', t)
+    t = t.lower().strip()
+    t = re.sub(r"[^\w\s']", ' ', t)
+    t = re.sub(r'\s+', ' ', t).strip()
+    return t
+
+
+_LABEL_NUMERIC_RE = re.compile(r'^(case|step|no|number|chapter|part)?\s*\d+$')
+
+
+def is_section_label(raw):
+    """True if the raw text should be preserved as a generic section label.
+
+    Catches: empty strings, the whitelist, short numeric/decorative labels
+    like "1", "case 1", "step 3", and any text shorter than 3 chars.
+    """
+    n = normalize_text(raw)
+    if not n:
+        return True
+    if len(n) < 3:
+        return True
+    if _LABEL_NUMERIC_RE.match(n):
+        return True
+    return n in SECTION_LABELS
+
+
+def is_token_text(raw):
+    """True if the value is already a {{token}}-only string (don't double-tokenize)."""
+    if not raw:
+        return False
+    t = re.sub(r'<[^>]+>', '', raw).strip()
+    return bool(re.fullmatch(r'\{\{[^{}]+\}\}', t))
+
 
 # ─── Section detection ───────────────────────────────────────────────────
 
@@ -68,20 +151,18 @@ def analyze_container(el, depth=0):
         'repeated_patterns': [],
         'child_containers': 0,
     }
-    
+
     if not isinstance(el, dict):
         return info
-    
+
     settings = el.get('settings', {})
     etype = el.get('elType', '')
     wtype = el.get('widgetType', '')
-    
-    # Check for background images
+
     bg = settings.get('background_image', {})
     if isinstance(bg, dict) and bg.get('url'):
         info['bg_images'].append(bg['url'])
-    
-    # Classify widgets
+
     if wtype:
         info['widgets'].append(wtype)
         if wtype == 'heading':
@@ -100,11 +181,10 @@ def analyze_container(el, depth=0):
             info['forms'].append(wtype)
         elif wtype in ('counter', 'rkit-counter'):
             info['counters'].append(settings.get('suffix', ''))
-    
+
     if etype == 'container' and depth > 0:
         info['child_containers'] += 1
-    
-    # Recurse into children
+
     for child in el.get('elements', []):
         child_info = analyze_container(child, depth + 1)
         for key in info:
@@ -112,7 +192,7 @@ def analyze_container(el, depth=0):
                 info[key].extend(child_info[key])
             elif isinstance(info[key], int):
                 info[key] += child_info[key]
-    
+
     return info
 
 
@@ -121,36 +201,65 @@ def classify_section(info):
     headings_text = ' '.join(info['headings']).lower()
     texts_text = ' '.join(info['texts']).lower()
     all_text = headings_text + ' ' + texts_text
-    
-    # Check for testimonials
+
     if any(w in all_text for w in ['testimonial', 'review', 'client', 'trusted voices', 'what our']):
         return 'testimonials'
-    
-    # Check for pricing
+
     if any(w in all_text for w in ['pricing', '/month', 'starter', 'enterprise', 'pro plan', 'packages']):
         return 'pricing'
-    
-    # Check for contact/form
+
     if info['forms']:
         return 'contact'
-    
-    # Check for about
+
     if any(w in all_text for w in ['about', 'who we are', 'our story', 'our company']):
         return 'about'
-    
-    # Check for services/features
+
     if any(w in all_text for w in ['features', 'services', 'what we offer', 'capabilities']):
         return 'services'
-    
-    # First section with background image is likely hero
+
     if info['bg_images'] and len(info['headings']) <= 4:
         return 'hero'
-    
-    # Sections with many similar child containers are likely services
+
     if info['child_containers'] >= 3 and len(info['headings']) >= 3:
         return 'services'
-    
+
     return 'unknown'
+
+
+# ─── Aggressive tokenization core ────────────────────────────────────────
+
+def aggressive_tokenize_section(el, stype):
+    """Walk every heading and text-editor in this section that is NOT already
+    inside a `_wp_repeat` container, and replace its text with the section-
+    context token unless the text is a generic section label.
+
+    Skips widgets/containers marked with `_wp_keep`.
+    """
+    h_token = HEADING_TOKEN_BY_SECTION.get(stype, '{{tagline}}')
+    t_token = TEXT_TOKEN_BY_SECTION.get(stype, '{{about_short}}')
+
+    def walk(node, in_repeat):
+        if not isinstance(node, dict):
+            return
+        s = node.get('settings', {})
+        if s.get('_wp_keep'):
+            return
+        if s.get('_wp_repeat'):
+            in_repeat = True
+        wtype = node.get('widgetType', '')
+        if not in_repeat and wtype:
+            if wtype == 'heading':
+                title = s.get('title', '')
+                if not is_token_text(title) and not is_section_label(title):
+                    s['title'] = h_token
+            elif wtype == 'text-editor':
+                editor = s.get('editor', '')
+                if not is_token_text(editor) and not is_section_label(editor):
+                    s['editor'] = t_token
+        for c in node.get('elements', []):
+            walk(c, in_repeat)
+
+    walk(el, in_repeat=False)
 
 
 # ─── Conversion engine ───────────────────────────────────────────────────
@@ -159,15 +268,15 @@ def convert_template(data):
     """Main conversion function. Takes raw Elementor JSON, returns marked version."""
     content = data.get('content', [])
     sections = detect_sections(content)
-    
+
     converted = copy.deepcopy(data)
     converted['metadata'] = converted.get('metadata', {})
     converted['metadata']['_meta_converted'] = 'webprinter-v5.2'
-    
+
     for section in sections:
         idx = section['index']
         stype = section['type']
-        
+
         if stype == 'hero':
             convert_hero(converted['content'][idx])
         elif stype == 'about':
@@ -181,127 +290,108 @@ def convert_template(data):
         elif stype == 'contact':
             convert_contact(converted['content'][idx])
         else:
-            # Auto-purge handles images in unknown sections
-            mark_images_stock(converted['content'][idx])
-    
+            convert_unknown(converted['content'][idx])
+
     return converted
 
 
 def convert_hero(el):
-    """Convert hero section: tagline, about_short, hero background."""
+    """Hero: bg → stock, first image → _wp_img:hero, buttons → cta, headings → tagline, text → about_short."""
     settings = el.get('settings', {})
-    
-    # Mark background image as hero
     if settings.get('background_image', {}).get('url'):
         settings['_wp_stock'] = 'hero'
-    
-    # Walk children
-    first_heading = True
+
+    first_image = True
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
-        if wtype == 'heading' and first_heading:
-            s['title'] = '{{tagline}}'
-            first_heading = False
-        elif wtype == 'text-editor' and is_lorem(s.get('editor', '')):
-            s['editor'] = '{{about_short}}'
-        elif wtype == 'image':
-            if s.get('image', {}).get('url'):
+        if wtype == 'image' and s.get('image', {}).get('url'):
+            if first_image:
+                s['_wp_img'] = 'hero'
+                first_image = False
+            else:
                 s['_wp_stock'] = 'hero'
-                s['image'] = {'url': '', 'id': 0}
+            s['image'] = {'url': '', 'id': 0}
         elif wtype == 'button':
             s['text'] = '{{cta.primary_text}}'
 
+    aggressive_tokenize_section(el, 'hero')
+
 
 def convert_about(el):
-    """Convert about section: about_long, about image, credentials."""
-    heading_count = 0
-    text_count = 0
-    
+    """About: first image → _wp_img:about, icon-list → credentials, buttons → cta,
+    headings → tagline, text → about_long."""
+    first_image = True
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
-        if wtype == 'heading':
-            heading_count += 1
-            title = s.get('title', '').lower()
-            if any(w in title for w in ['about', 'who we']):
-                pass  # Keep section labels
-            elif heading_count <= 2:
-                s['title'] = '{{tagline}}'
-        elif wtype == 'text-editor':
-            text_count += 1
-            text = s.get('editor', '').lower()
-            if any(w in text for w in ['about', '<p>about</p>']):
-                pass  # Keep section labels
-            elif is_lorem(text) or text_count == 1:
-                s['editor'] = '{{about_long}}'
-        elif wtype == 'image':
-            if s.get('image', {}).get('url'):
+        if wtype == 'image' and s.get('image', {}).get('url'):
+            if first_image:
                 s['_wp_img'] = 'about'
-                s['image'] = {'url': '', 'id': 0}
+                first_image = False
+            else:
+                s['_wp_stock'] = 'team'
+            s['image'] = {'url': '', 'id': 0}
         elif wtype == 'button':
             s['text'] = '{{cta.primary_text}}'
         elif wtype == 'icon-list':
             convert_icon_list_to_credentials(s)
 
+    aggressive_tokenize_section(el, 'about')
+
 
 def convert_services(el):
-    """Convert services section: find repeated card patterns, apply _wp_repeat."""
-    # Find the section label and main heading
+    """Services: find repeated cards → _wp_repeat:services (tokens inside),
+    section-level headings → tagline, text → about_short, stray images → stock."""
+    find_and_mark_repeats(el, 'services')
+
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
-        if wtype == 'heading':
-            title = s.get('title', '').lower()
-            if any(w in title for w in ['features', 'services', 'what we offer']):
-                pass  # Keep
-            elif any(w in title for w in ['showcasing', 'our']):
-                s['title'] = '{{tagline}}'
-        elif wtype == 'text-editor' and is_lorem(s.get('editor', '')):
-            s['editor'] = '{{about_short}}'
-    
-    # Find repeated card containers and mark first with _wp_repeat
-    find_and_mark_repeats(el, 'services')
+        if wtype == 'button':
+            s['text'] = '{{cta.primary_text}}'
+
+    mark_images_stock(el, category='action')
+    aggressive_tokenize_section(el, 'services')
 
 
 def convert_testimonials(el):
-    """Convert testimonials section: find quote cards, apply _wp_repeat."""
-    # Mark section heading
-    for child in walk_widgets(el):
-        wtype = child.get('widgetType', '')
-        s = child.get('settings', {})
-        
-        if wtype == 'heading':
-            title = s.get('title', '')
-            if title.startswith('"') or title.startswith('\u201c'):
-                # This is a quote — will be handled by repeat
-                pass
-    
-    # Find repeated quote containers
+    """Testimonials: find repeated cards → _wp_repeat:testimonials (quote/author tokens),
+    wrap section in _wp_if:testimonials so it disappears when source has none."""
     find_and_mark_repeats(el, 'testimonials')
+    el.setdefault('settings', {})['_wp_if'] = 'testimonials'
+    aggressive_tokenize_section(el, 'testimonials')
 
 
 def convert_pricing(el):
-    """Convert pricing section with _wp_if so it can be hidden when no pricing data."""
-    el['settings']['_wp_if'] = 'pricing'
+    """Pricing: hide whole section with _wp_if:pricing, mark images stock,
+    still tokenize headings/text in case the section is ever shown."""
+    el.setdefault('settings', {})['_wp_if'] = 'pricing'
     mark_images_stock(el)
+    aggressive_tokenize_section(el, 'pricing')
 
 
 def convert_contact(el):
-    """Convert contact/form section."""
+    """Contact/form: headings → cta.primary_text, text → about_short."""
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
-        if wtype == 'heading':
-            title = s.get('title', '').lower()
-            if any(w in title for w in ['contact', 'get in touch', 'reach', 'ready']):
-                s['title'] = '{{cta.primary_text}}'
-        elif wtype == 'text-editor' and is_lorem(s.get('editor', '')):
-            s['editor'] = '{{about_short}}'
+        if wtype == 'button':
+            s['text'] = '{{cta.primary_text}}'
+
+    aggressive_tokenize_section(el, 'contact')
+
+
+def convert_unknown(el):
+    """Unknown section: tokenize all headings/text generically + mark images stock.
+    Prevents niche copy from leaking through sections the classifier didn't recognize."""
+    mark_images_stock(el)
+    for child in walk_widgets(el):
+        wtype = child.get('widgetType', '')
+        s = child.get('settings', {})
+        if wtype == 'button':
+            s['text'] = '{{cta.primary_text}}'
+    aggressive_tokenize_section(el, 'unknown')
 
 
 # ─── Repeat detection ────────────────────────────────────────────────────
@@ -309,49 +399,40 @@ def convert_contact(el):
 def find_and_mark_repeats(el, array_name):
     """Find containers that look like repeated cards (similar structure).
     Keep the first, mark with _wp_repeat, delete the rest."""
-    
+
     containers = el.get('elements', [])
     if not containers:
         return
-    
-    # Look for groups of sibling containers with similar widget structures
+
     for container in containers:
         children = container.get('elements', [])
         if len(children) < 2:
             continue
-        
-        # Get widget signatures for each child
+
         signatures = []
         for child in children:
             sig = get_widget_signature(child)
             signatures.append(sig)
-        
-        # Find groups with identical signatures (repeated cards)
+
         sig_counts = defaultdict(list)
         for i, sig in enumerate(signatures):
             sig_counts[sig].append(i)
-        
+
         for sig, indices in sig_counts.items():
-            if len(indices) >= 2 and sig:  # 2+ similar containers = repeating pattern
-                # Mark the first one with _wp_repeat
+            if len(indices) >= 2 and sig:
                 first_idx = indices[0]
                 first_child = children[first_idx]
                 first_child.setdefault('settings', {})['_wp_repeat'] = array_name
                 first_child['settings']['_wp_repeat_max'] = 8
-                
-                # Apply tokens inside the first card
+
                 apply_card_tokens(first_child, array_name)
-                
-                # Mark images as stock inside the first card
                 mark_images_stock(first_child, category='action')
-                
-                # Remove duplicates (reverse order to preserve indices)
+
                 for idx in sorted(indices[1:], reverse=True):
                     del children[idx]
-                
-                break  # Only process one repeat group per container level
-        
-        # Recurse into remaining children
+
+                break
+
         for child in children:
             if child.get('elType') == 'container':
                 find_and_mark_repeats(child, array_name)
@@ -362,39 +443,60 @@ def get_widget_signature(el):
     if el.get('elType') != 'container':
         wtype = el.get('widgetType', '')
         return wtype if wtype else ''
-    
+
     child_sigs = []
     for child in el.get('elements', []):
         sig = get_widget_signature(child)
         if sig:
             child_sigs.append(sig)
-    
+
     return '|'.join(child_sigs) if child_sigs else ''
 
 
+CARD_HEADING_TOKEN = {
+    'services': '{{services._item.name}}',
+    'testimonials': '{{testimonials._item.quote}}',
+    'team': '{{team._item.name}}',
+    'process_steps': '{{process_steps._item.title}}',
+    'credentials': '{{credentials._item.name}}',
+    'service_areas': '{{service_areas._item.name}}',
+}
+
+CARD_TEXT_TOKEN = {
+    'services': '{{services._item.description}}',
+    'testimonials': '{{testimonials._item.author}}',
+    'team': '{{team._item.title}}',
+    'process_steps': '{{process_steps._item.description}}',
+    'credentials': '{{credentials._item.name}}',
+    'service_areas': '{{service_areas._item.name}}',
+}
+
+
 def apply_card_tokens(el, array_name):
-    """Apply _item tokens inside a repeated card."""
-    heading_count = 0
-    text_count = 0
-    
+    """Aggressively tokenize ALL headings and text-editors inside a repeat card.
+
+    - Every non-label heading → card heading token (e.g. {{services._item.name}})
+    - Every non-label text-editor → card text token (e.g. {{services._item.description}})
+    - Section labels and `_wp_keep` widgets are left alone
+    """
+    h_token = CARD_HEADING_TOKEN.get(array_name, '{{' + array_name + '._item.name}}')
+    t_token = CARD_TEXT_TOKEN.get(array_name, '{{' + array_name + '._item.description}}')
+
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
+        if s.get('_wp_keep'):
+            continue
         if wtype == 'heading':
-            heading_count += 1
-            if heading_count == 1:
-                if array_name == 'testimonials':
-                    s['title'] = '{{testimonials._item.quote}}'
-                else:
-                    s['title'] = '{{' + array_name + '._item.name}}'
+            title = s.get('title', '')
+            if not is_token_text(title) and not is_section_label(title):
+                s['title'] = h_token
         elif wtype == 'text-editor':
-            text_count += 1
-            if text_count == 1:
-                if array_name == 'testimonials':
-                    s['editor'] = '{{testimonials._item.author}}'
-                else:
-                    s['editor'] = '{{' + array_name + '._item.description}}'
+            editor = s.get('editor', '')
+            if not is_token_text(editor) and not is_section_label(editor):
+                s['editor'] = t_token
+        elif wtype == 'button':
+            s['text'] = '{{cta.primary_text}}'
 
 
 # ─── Utility functions ───────────────────────────────────────────────────
@@ -409,20 +511,11 @@ def walk_widgets(el):
         yield from walk_widgets(child)
 
 
-def is_lorem(text):
-    """Check if text contains lorem ipsum placeholder content."""
-    if not text:
-        return False
-    t = text.lower()
-    return 'lorem ipsum' in t or 'dolor sit amet' in t or 'consectetur adipiscing' in t
-
-
 def mark_images_stock(el, category='generic'):
     """Mark all unmarked image widgets with _wp_stock."""
     for child in walk_widgets(el):
         wtype = child.get('widgetType', '')
         s = child.get('settings', {})
-        
         if wtype == 'image' and not s.get('_wp_img') and not s.get('_wp_stock') and not s.get('_wp_keep'):
             if s.get('image', {}).get('url'):
                 s['_wp_stock'] = category
@@ -434,15 +527,49 @@ def convert_icon_list_to_credentials(settings):
     icon_list = settings.get('icon_list', [])
     if not icon_list:
         return
-    
+
     settings['_wp_if'] = 'credentials'
-    
-    # Keep first item, add _wp_repeat, delete rest
+
     if len(icon_list) > 0:
         first = icon_list[0]
         first['_wp_repeat'] = 'credentials'
         first['text'] = '{{credentials._item.name}}'
         settings['icon_list'] = [first]
+
+
+# ─── Audit mode ──────────────────────────────────────────────────────────
+
+def audit(data):
+    """Convert, then walk the result and report any heading/text-editor that
+    still holds literal (non-token, non-label) text. Exit code 1 if any leaks."""
+    converted = convert_template(data)
+    leaks = []
+
+    def walk(node, path):
+        if not isinstance(node, dict):
+            return
+        wtype = node.get('widgetType', '')
+        s = node.get('settings', {})
+        if wtype == 'heading':
+            t = s.get('title', '')
+            if t and not is_token_text(t) and not is_section_label(t):
+                leaks.append(('heading.title', path, t[:140]))
+        elif wtype == 'text-editor':
+            t = s.get('editor', '')
+            if t and not is_token_text(t) and not is_section_label(t):
+                leaks.append(('text-editor.editor', path, t[:140]))
+        for i, c in enumerate(node.get('elements', [])):
+            walk(c, path + f'/elements[{i}]')
+
+    for i, sec in enumerate(converted.get('content', [])):
+        walk(sec, f'content[{i}]')
+
+    print(f"\nAUDIT — {data.get('title', 'Unknown')}")
+    print(f"Leaks: {len(leaks)}")
+    for kind, path, txt in leaks:
+        print(f"  • {kind} @ {path}")
+        print(f"    {txt!r}")
+    return 0 if not leaks else 1
 
 
 # ─── Report mode ─────────────────────────────────────────────────────────
@@ -451,12 +578,12 @@ def report(data):
     """Print a human-readable section map of the template."""
     content = data.get('content', [])
     sections = detect_sections(content)
-    
-    print(f"\n{'='*60}")
+
+    print(f"\n{'=' * 60}")
     print(f"TEMPLATE: {data.get('title', 'Unknown')}")
     print(f"SECTIONS: {len(sections)}")
-    print(f"{'='*60}\n")
-    
+    print(f"{'=' * 60}\n")
+
     for s in sections:
         info = s['info']
         print(f"Section {s['index'] + 1}: {s['type'].upper()}")
@@ -475,14 +602,16 @@ def report(data):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: python3 convert_template.py input.json [--report]")
+        print("Usage: python3 convert_template.py input.json [--report|--audit]")
         sys.exit(1)
-    
+
     with open(sys.argv[1], 'r') as f:
         data = json.load(f)
-    
+
     if '--report' in sys.argv:
         report(data)
+    elif '--audit' in sys.argv:
+        sys.exit(audit(data))
     else:
         converted = convert_template(data)
         print(json.dumps(converted, indent=2, ensure_ascii=False))

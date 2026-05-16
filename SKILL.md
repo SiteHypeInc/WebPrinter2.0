@@ -118,18 +118,21 @@ with open('kit.json', 'w') as f:
 ```
 **Kit passthrough:** Everything in kit.json is applied to `_elementor_page_settings` EXCEPT these reserved keys: `system_colors`, `custom_colors`, `system_typography`, `custom_typography`, `_kit_name`, `_kit_version`, `_source`. Those are handled separately. All other keys flow through automatically — `body_background_*`, custom CSS, viewports, everything.
 
-### Step 3: Run the converter
+### Step 3: Run the converter (v2 — aggressive mode)
 ```bash
-python3 tools/convert_template.py input.json --report   # See detection
+python3 tools/convert_template.py input.json --report   # See section detection
 python3 tools/convert_template.py input.json > output.json  # Convert
+python3 tools/convert_template.py output.json --audit    # Verify zero niche copy leaks (exits 1 if any)
 ```
 
-### Step 4: Cleanup pass (~15% manual)
-1. Find/replace original brand name, email, phone, address with tokens
-2. Do NOT replace brand names inside image URLs (auto-purge handles those)
-3. Header: `_wp_img: "logo"`, `{{business_name}}`, `{{cta.primary_text}}`
-4. Footer: same + `{{contact.email}}`, `{{contact.phone}}`, nav columns
-5. Keep generic section labels ("About", "Features"). Replace brand headlines with `{{tagline}}`
+v2 replaces ALL `heading` and `text-editor` widgets with tokens unless the text matches `SECTION_LABELS` (e.g. "About", "Services", "FAQ", "Contact") or is a short decorative label like "1", "case 1", "step 3". Token choice depends on section context (hero/about/services/testimonials/contact/pricing/unknown) and on whether the widget sits inside a `_wp_repeat` card. Mark widgets you want preserved literally with `_wp_keep: true`.
+
+### Step 4: Cleanup pass (header/footer + images only)
+The aggressive converter handles section body copy. Manual passes still needed for:
+1. Header: `_wp_img: "logo"`, `{{business_name}}`, `{{cta.primary_text}}` (these widgets are usually outside the section classifier)
+2. Footer: same + `{{contact.email}}`, `{{contact.phone}}`, nav columns
+3. Brand names inside image URLs — leave them, auto-purge handles those
+4. If the audit reports leaks, either widen `SECTION_LABELS` in the converter or mark the widget with `_wp_keep: true`
 
 ### Step 5: Rename files to match slugs
 Pages (WordPress pages): `home`, `about`, `services`, `quote`, `contact`
@@ -221,6 +224,6 @@ Fallback chain: trade.category → trade.generic → general.category → genera
 2. **NEVER modify templates on the live site** — changes go through GitHub repo, then redeploy
 3. **Always verify rendered pages** — `success: true` ≠ correct visual output
 4. **Image URLs in template JSON** get auto-purged at deploy time — don't fix them manually
-5. **Converter gets ~85%** — always cleanup brand-specific text after
+5. **Converter v2 = aggressive mode** — zero niche copy should survive `--audit`; only header/footer chrome + image markers need a manual pass
 6. **Header/footer** need extra attention — they appear on every page
 7. **Check stock manifest** before deploying to a new trade
