@@ -1,7 +1,37 @@
 # WebPrinter State
 
-**Last updated:** 2026-05-16 (Wake 13 — Cloudways multisite live, plugin v5.2.1 patch deployed, smoke deploy ✅)
-**Updated by:** WP Pilot. Mission across Wakes 9-13 from Johnny on TEA-792: stand up `getinstabid.pro` as the WebPrinter production multisite on Cloudways. Done.
+**Last updated:** 2026-05-16 (Wake 20 — TEA-812 ezbreeze × Pyramid Heating: lorem-ipsum killed, jkit_heading converter-supported, Vision delta delivered)
+**Updated by:** WP Pilot on TEA-812.
+
+## Wake 20 — ezbreeze × Pyramid Heating deploy + converter v2.1 fix
+
+**Mission (TEA-812):** Run the full pipeline POC on the v2 converter — source EzbreezE kit → convert → deploy to `getinstabid.pro/pdx-hvac/` with Pyramid Heating content → Vision QA ≥80 OR written delta.
+
+**Converter fix shipped (PR #9 → `c1be543` on main):**
+
+1. **Empty `text-editor.editor` → lorem-ipsum default.** Bug at `tools/convert_template.py:107` — `is_section_label('')` returned True, so the tokenizer skipped widgets with missing/empty `editor`. Elementor then rendered its default `Lorem ipsum dolor sit amet…`. Fix: in `aggressive_tokenize_section` + `apply_card_tokens`, an empty/whitespace-only editor is forced to the section text token. Layer = converter.
+
+2. **JetElements `jkit_heading` widget unsupported.** EzbreezE uses jkit_heading for all section titles; its six visible-text fields (`sg_title_text`, `sg_title_focused`, `sg_title_before`, `sg_title_after`, `sg_subtitle_heading`, `sg_shadow_content`) were ignored, leaking raw template copy. New `tokenize_jkit_heading(s, h_token, t_token)` puts the heading token on `sg_title_text`, the text token on `sg_subtitle_heading`, and blanks the decorative fields. Audit extended to cover the same six fields. Layer = converter.
+
+All 5 EzbreezE pages re-converted; `--audit` reports **0 leaks** on home/about/services/quote/contact.
+
+**Redeploy result — `https://getinstabid.pro/pdx-hvac/` (blog 2):**
+- HTTP 200, `{success:true, version:"5.2", template:"ezbreeze", company:"Pyramid Heating & Cooling", updated:{home,about,services,quote,contact,header:"updated",footer:"updated"}, errors:[], image_ids:{hero:0,about:0,service:0,logo:0}}`.
+- HTML pre-flight across all 5 pages: **0 lorem ipsum** (was 2-15 per page), **0 raw `{{token}}` leaks**, **0 template brand names**, **"Pyramid Heating" present 5-8x per page**, **14 locally-hosted hvac stock images** loaded on home (hero/team/action).
+
+**Vision delta (written — standing-order requires ≥80 score or this explanation):**
+
+Score estimate: **~62/100** — below the 80 standing-order. Δ vs Wake 13 smoke (~49/100) ≈ **+13** for content-leakage fixes. Three named-layer issues prevent ≥80; none are regressions from this wake's work:
+
+- **Layer = converter (HEADING_TOKEN_BY_SECTION map).** `HEADING_TOKEN_BY_SECTION` maps every non-card section heading to `{{tagline}}`. On the ezbreeze home page that means "Expert HVAC Services for Portland, Bend & Beyond" renders as the section title for hero, about, services, testimonials, FAQ, articles, etc. — 8+ duplicates on one page. Fix path: map sections to distinct content fields (e.g., services → `{{services_heading}}` w/ payload extension, or fall back to label-literal-from-source rather than a token). Owner: converter rev v2.2.
+- **Layer = converter (contact-info widget coverage).** EzbreezE contact info is rendered via `elementskit-accordion`, `google_maps`, `metform`, `icon` widgets that the converter doesn't tokenize. Result: no `(503) 416-2201` phone on any rendered page. Fix path: add per-widget-type handlers similar to jkit_heading. Owner: converter rev v2.2.
+- **Layer = WP/HFE infra (blog 2).** Deploy response says `footer: "updated"` and `header: "updated"`, but `elementor-location-footer` / `elementor-location-header` are 0 in rendered HTML on blog 2. The HFE templates are being created but not displayed → HFE plugin isn't applying the templates on this multisite. The footer is where `{{contact.phone}}` / `{{contact.email}}` / `{{contact.address.*}}` tokens live. Fix path: check HFE plugin activation per-blog and HFE template "Display On" location targeting. Owner: WP/Cloudways admin (Johnny).
+
+**Stop here per score-flat-honesty rule.** No iteration #3 this wake — the next-largest gains require either converter v2.2 (own scope) or HFE infra fixes (out of repo lane).
+
+**Repo state after wake:** main = `c1be543`, branch `fix/converter-empty-editor-and-jkit` deleted on merge. PR #9 merged. No engine PHP changes (engine still v5.2-gold). 1 new file committed: `tools/convert_template.py` (+56 lines / -56 lines net for the helper); 5 templates re-converted.
+
+---
 
 ## Cloudways production multisite — LIVE
 
