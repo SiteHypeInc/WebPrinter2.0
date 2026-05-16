@@ -1,5 +1,5 @@
 {
-  "_note": "Unsplash License \u2014 free for commercial use. Re-hosted on GitHub raw to satisfy WordPress media_sideload_image() extension regex.",
+  "_note": "Mixed Unsplash + Pexels stock. All photos free for commercial use under their respective licenses. Re-hosted on GitHub raw to satisfy WordPress media_sideload_image() extension regex. The HVAC set was re-curated 2026-05-16 (TEA-792 Wake 19) from Pexels after the original Unsplash files were found to be mis-categorized.",
   "images": [
     {
       "file": "general/generic/general-generic-01.jpg",
@@ -24,66 +24,84 @@
     },
     {
       "file": "hvac/hero/hvac-hero-01.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1585771724684-38269d6639fd",
-      "original_url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1920&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "32497161",
+      "photographer": "Kathleen Austin Kuhn",
+      "original_url": "https://www.pexels.com/photo/32497161/",
+      "description": "Technician inspects outdoor Carrier AC unit for maintenance",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/hero/hvac-hero-02.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1621905252507-b35492cc74b4",
-      "original_url": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "5463581",
+      "photographer": "José Andrés Pacheco Cortes",
+      "original_url": "https://www.pexels.com/photo/5463581/",
+      "description": "Technician repairing rooftop HVAC condenser unit",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/action/hvac-action-01.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1581094794329-c8112a89af12",
-      "original_url": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1200&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "7347538",
+      "photographer": "Richard Low Hong",
+      "original_url": "https://www.pexels.com/photo/7347538/",
+      "description": "Technician servicing wall-mounted split AC unit with refrigerant gauges",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/action/hvac-action-02.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1504328345606-18bbc8c9d7d1",
-      "original_url": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "5463575",
+      "photographer": "José Andrés Pacheco Cortes",
+      "original_url": "https://www.pexels.com/photo/5463575/",
+      "description": "Technician using pressure gauges on rooftop air conditioning unit",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/team/hvac-team-01.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1560250097-0b93528c311a",
-      "original_url": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "32863789",
+      "photographer": "Gene Samit",
+      "original_url": "https://www.pexels.com/photo/32863789/",
+      "description": "HVAC service technician in branded uniform beside service truck",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/team/hvac-team-02.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1519085360753-af0119f7cbe7",
-      "original_url": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "11792318",
+      "photographer": "bangunstockproduction",
+      "original_url": "https://www.pexels.com/photo/11792318/",
+      "description": "Smiling service technician in coveralls, studio portrait",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/generic/hvac-generic-01.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1585771724684-38269d6639fd",
-      "original_url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "27134985",
+      "photographer": "FOX",
+      "original_url": "https://www.pexels.com/photo/27134985/",
+      "description": "Panasonic outdoor inverter AC unit wall-mounted",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/generic/hvac-generic-02.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1504328345606-18bbc8c9d7d1",
-      "original_url": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "5463587",
+      "photographer": "José Andrés Pacheco Cortes",
+      "original_url": "https://www.pexels.com/photo/5463587/",
+      "description": "Technician drilling on outdoor AC condenser unit, rooftop",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "hvac/generic/hvac-generic-03.jpg",
-      "source": "unsplash",
-      "unsplash_photo_id": "1621905252507-b35492cc74b4",
-      "original_url": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1200&q=80",
-      "license": "Unsplash License (https://unsplash.com/license)"
+      "source": "pexels",
+      "pexels_photo_id": "7859953",
+      "photographer": "Heiko Ruth",
+      "original_url": "https://www.pexels.com/photo/7859953/",
+      "description": "Gloved hands working on residential boiler/furnace controls",
+      "license": "Pexels License (https://www.pexels.com/license/)"
     },
     {
       "file": "roofing/hero/roofing-hero-01.jpg",
