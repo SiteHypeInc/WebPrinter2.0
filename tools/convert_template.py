@@ -254,8 +254,14 @@ def aggressive_tokenize_section(el, stype):
                     s['title'] = h_token
             elif wtype == 'text-editor':
                 editor = s.get('editor', '')
-                if not is_token_text(editor) and not is_section_label(editor):
+                # Elementor renders default lorem-ipsum when editor is missing/empty,
+                # so we must always force a token (do NOT treat empty as a section label).
+                if not editor or not editor.strip():
                     s['editor'] = t_token
+                elif not is_token_text(editor) and not is_section_label(editor):
+                    s['editor'] = t_token
+            elif wtype == 'jkit_heading':
+                tokenize_jkit_heading(s, h_token, t_token)
         for c in node.get('elements', []):
             walk(c, in_repeat)
 
@@ -493,10 +499,51 @@ def apply_card_tokens(el, array_name):
                 s['title'] = h_token
         elif wtype == 'text-editor':
             editor = s.get('editor', '')
-            if not is_token_text(editor) and not is_section_label(editor):
+            # Empty/missing editor → Elementor lorem-ipsum default, so force a token.
+            if not editor or not editor.strip():
                 s['editor'] = t_token
+            elif not is_token_text(editor) and not is_section_label(editor):
+                s['editor'] = t_token
+        elif wtype == 'jkit_heading':
+            tokenize_jkit_heading(s, h_token, t_token)
         elif wtype == 'button':
             s['text'] = '{{cta.primary_text}}'
+
+
+# ─── JetElements jkit_heading helper ─────────────────────────────────────
+
+# jkit_heading is JetElements' main-heading widget. It has six text fields:
+#   sg_title_before / sg_title_focused / sg_title_text / sg_title_after  → headline
+#   sg_subtitle_heading                                                  → subtitle
+#   sg_shadow_content                                                    → decorative shadow text
+# Elementor's converter (`heading` / `text-editor`) doesn't touch any of these,
+# so we tokenize the visible-text fields here.
+JKIT_HEADLINE_FIELDS = ('sg_title_before', 'sg_title_focused', 'sg_title_text', 'sg_title_after')
+
+def tokenize_jkit_heading(s, h_token, t_token):
+    """Tokenize the six visible-text fields on a jkit_heading widget.
+
+    The headline is assembled from sg_title_before/_focused/_text/_after — we put
+    the section heading token on `sg_title_text` and blank the rest so the rendered
+    headline matches the token output. Subtitle → text token. Shadow → blanked.
+    """
+    # Headline: blank decorative parts, put token on the main `sg_title_text`.
+    for f in ('sg_title_before', 'sg_title_focused', 'sg_title_after'):
+        if f in s and isinstance(s[f], str) and s[f].strip() and not is_section_label(s[f]):
+            s[f] = ''
+    title = s.get('sg_title_text', '')
+    if not isinstance(title, str) or not title.strip() or (
+        not is_token_text(title) and not is_section_label(title)
+    ):
+        s['sg_title_text'] = h_token
+
+    sub = s.get('sg_subtitle_heading', '')
+    if isinstance(sub, str) and sub.strip() and not is_token_text(sub) and not is_section_label(sub):
+        s['sg_subtitle_heading'] = t_token
+
+    shadow = s.get('sg_shadow_content', '')
+    if isinstance(shadow, str) and shadow.strip() and not is_section_label(shadow):
+        s['sg_shadow_content'] = ''
 
 
 # ─── Utility functions ───────────────────────────────────────────────────
@@ -558,6 +605,11 @@ def audit(data):
             t = s.get('editor', '')
             if t and not is_token_text(t) and not is_section_label(t):
                 leaks.append(('text-editor.editor', path, t[:140]))
+        elif wtype == 'jkit_heading':
+            for f in JKIT_HEADLINE_FIELDS + ('sg_subtitle_heading', 'sg_shadow_content'):
+                v = s.get(f, '')
+                if isinstance(v, str) and v.strip() and not is_token_text(v) and not is_section_label(v):
+                    leaks.append((f'jkit_heading.{f}', path, v[:140]))
         for i, c in enumerate(node.get('elements', [])):
             walk(c, path + f'/elements[{i}]')
 
