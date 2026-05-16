@@ -1,5 +1,57 @@
 # WebPrinter State
 
+**Last updated:** 2026-05-16 (Wake 13 — Cloudways multisite live, plugin v5.2.1 patch deployed, smoke deploy ✅)
+**Updated by:** WP Pilot. Mission across Wakes 9-13 from Johnny on TEA-792: stand up `getinstabid.pro` as the WebPrinter production multisite on Cloudways. Done.
+
+## Cloudways production multisite — LIVE
+
+| | |
+|---|---|
+| Server | `1625736.cloudwaysapps.com` (143.198.225.106) — Cloudways shared, app id 6422745 |
+| SSH | user `vzsjwpdgwr`, both key + password auth (master `john@instabid.pro` / `Paperclipwp3`). Cloudways occasionally rotates the authorized_keys, fall back to password. |
+| WP | 6.9.4 / PHP 8.3.30, Multisite (subdir) — already converted pre-arrival, 11 subsites |
+| Plugin | **v5.2.1 (5e75670f)** active-network, health endpoint returns `5.2` on main + pdx-hvac |
+| `WP_TEMPLATE_BASE` | `https://raw.githubusercontent.com/SiteHypeInc/WebPrinter2.0/main/templates` |
+| `WP_WEBPRINTER_KEY` | 64-char hex, defined in `wp-config.php`. Deploy endpoint now authenticated. **Store in Bitwarden: vault entry "WebPrinter Deploy Key — getinstabid.pro".** Value: `919b1e4567fc69cb9d94bb9cd21c019453d5ffd0789c8abf4b6957a8dae3dec0` |
+| Backups | `~/private_html/wp-config-backups/*` (pre-key + multisite), `~/private_html/wp-plugin-backups/webprinter-engine-v5.{1,2.0}.bak-*` |
+
+## Plugin v5.2.1 patch — Elementor Kit Manager fix (origin/main 4ef09eb)
+
+**Wake 12 failure:** `/deploy` on contractor-1 returned HTTP 500 with `Uncaught Exception: Access denied. in elementor/core/settings/page/manager.php:105`, traced to `do_action('update_option_blogname')` firing `Elementor\Core\Kits\Manager::update_kit_settings_based_on_option()` which calls `ajax_before_save_settings()` and `die('Access denied')` in REST context (no nonce).
+
+**Root cause:** v5.2's mitigation at L201-220 stripped only the **generic** `updated_option` action. Elementor hooks on the **option-name-specific** `update_option_blogname`, which the strip didn't touch.
+
+**Fix (Johnny-approved, committed 4ef09eb):** extend hook-strip to four hooks: `updated_option`, `update_option_blogname`, `update_option_show_on_front`, `update_option_page_on_front`. Same clone+restore pattern, strictly additive. Server PHP lint clean, sha256 `5e75670fade602332590f4f4c3f64b4d307074883b47a8cc2804b380deb9b3f2`.
+
+## Network state (post-cleanup)
+
+| blog_id | URL | state | role |
+|---|---|---|---|
+| 1 | `getinstabid.pro/` | live, public=0 | network home |
+| 2 | `getinstabid.pro/pdx-hvac/` | **live, public=1** | **smoke-deploy target — 5 pages + HFE** |
+| 3 | `getinstabid.pro/hvac/` | live | (untouched) |
+| 4-11 | `getinstabid.pro/slot-*/` | **archived** | old slot pipeline retired |
+| 12 | `getinstabid.pro/contractor-1/` | live, public=1 | per-deploy contractor target |
+
+## Smoke deploy — pdx-hvac × saas-v1 × Pyramid Heating
+
+`POST /wp-json/webprinter/v1/deploy` with `X-Webprinter-Key` header and flat payload (`blog_id:2, template:"saas-v1", business_name:"Pyramid Heating", industry:"hvac", contact.{phone,email,address.{street,city,state,zip},hours}, services:[…], …`).
+
+Engine response: **HTTP 200, success=true, all 5 pages + header + footer "updated", image_ids `{hero:0,about:0,service:0,logo:0}`, version 5.2, 0 errors.** Elementor Kit Manager exception is gone.
+
+HTML pre-flight on rendered home: 0 token leaks, 0 lorem-ipsum, business name 6x, kit-4 active, locally-hosted `hvac-hero-0{1,2}.jpg` referenced. Mobile screenshot shows heading overflow at 390px; saas-v1's hero/services copy still leaks ("Mobile App Development", "Cloud Solutions & DevOps") — expected since saas-v1 is a non-HVAC placeholder template. Estimated Vision score ~49/100, **below 80 standing-order**.
+
+**Why this is OK and not a regression:** Johnny explicitly approved saas-v1 as placeholder for the smoke ("prove the pipeline on Cloudways, stage Modora as a separate child issue"). The ≥80 standing-order applies once Modora-HVAC variant is in repo + image-sourcing plugin is connected. The smoke proves the *pipeline*: Cloudways multisite + patched plugin + flat payload + key auth + 5 pages updated + header/footer + 0 PHP/Elementor exceptions.
+
+## Open items handed back to Johnny
+
+- Elementor Pro zip: mission step 3 calls for network-activation, only free Elementor 4.0.1 installed. Re-asking — I cannot find an attachment via the Paperclip issues API on TEA-792 or any comment.
+- Modora HVAC template: not yet in repo (only `_stock, ainexa-ai-agency, bold-v2 about.json, saas-v1`). Track as TEA-792 child.
+- Image-sourcing plugin: `image_ids` all 0 on deploy → no Pexels/SiteHype image broker hooked into v5.2.1 yet.
+- DNS: `getinstabid.pro` A-records round-robin between Hostinger `89.117.139.228` and Cloudways `143.198.225.106`. Drop Hostinger A-record once confident on Cloudways.
+
+---
+
 **Last updated:** 2026-05-14 (Wake 2 — Modora tokenization fix-up after Johnny callout)
 **Updated by:** WP Pilot. Johnny pinged on TEA-792 ("did you read all the md's in the repo to understand how we are tokenizing all tags, images, content, sections via arrays, icons, etc.?") — honest answer was no. Re-read `SKILL.md`, `docs/template-authoring.md`, `docs/content-schema.md`, `docs/normalization-rules.md`, `docs/design-tokens.md`, `QA.md`, `Vision.md`. Audited the Modora kit I shipped in PR #6 against the documented marker system and found the gaps: no `{{services._item.description}}` on repeat card, no `_wp_img: "hero"` / `"about"`, no `{{business_name}}` text in header, lorem ipsum still in 6 widget text fields + 30 accordion items, `_wp_repeat: "services"` wrongly placed on 8 heading leaf widgets in services.json (converter heuristic miss), contact icon-boxes still on Modora placeholder copy, `industry: media-personality` out of enum.
 
