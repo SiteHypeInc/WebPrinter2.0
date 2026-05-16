@@ -423,7 +423,7 @@
                         "sg_title_focused": "",
                         "sg_title_text": "{{tagline}}",
                         "sg_subtitle_heading": "{{about_short}}",
-                        "sg_shadow_content": "",
+                        "sg_shadow_content": "news",
                         "sg_separator_enable": "",
                         "st_focused_typography_content_typography_typography": "custom",
                         "st_focused_typography_content_typography_font_family": "Outfit",
@@ -745,7 +745,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{about_short}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -1471,7 +1472,7 @@
                         "sg_title_focused": "",
                         "sg_title_text": "{{tagline}}",
                         "sg_subtitle_heading": "{{about_short}}",
-                        "sg_shadow_content": "",
+                        "sg_shadow_content": "news",
                         "sg_separator_enable": "",
                         "st_focused_typography_content_typography_typography": "custom",
                         "st_focused_typography_content_typography_font_family": "Outfit",
@@ -1860,12 +1861,12 @@
                     "_id": "c2d0f4b"
                   },
                   {
-                    "tab_title": "Routine Maintenance & Tune-Ups\u200b",
+                    "tab_title": "Routine Maintenance & Tune-Ups​",
                     "_id": "13e4107"
                   },
                   {
                     "_id": "f6be951",
-                    "tab_title": "Emergency Cooling Services\u200b"
+                    "tab_title": "Emergency Cooling Services​"
                   }
                 ],
                 "tabs_direction": "block-start",
@@ -7864,7 +7865,7 @@
                     "sg_title_after": "",
                     "sg_title_text": "{{tagline}}",
                     "sg_subtitle_heading": "{{about_short}}",
-                    "sg_shadow_content": "",
+                    "sg_shadow_content": "news",
                     "sg_separator_enable": "",
                     "st_title_typography_content_typography_typography": "custom",
                     "st_title_typography_content_typography_font_family": "Outfit",
@@ -8154,7 +8155,8 @@
                       "url": "",
                       "id": "",
                       "size": ""
-                    }
+                    },
+                    "editor": "{{about_short}}"
                   },
                   "elements": [],
                   "isInner": false,
@@ -8968,7 +8970,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{services._item.description}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -9479,7 +9482,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{services._item.description}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -9807,12 +9811,12 @@
                 {
                   "id": "37c28488",
                   "settings": {
-                    "sg_title_before": "",
+                    "sg_title_before": "Trusted by ",
                     "sg_title_focused": "",
                     "sg_title_after": "",
                     "sg_title_text": "{{tagline}}",
                     "sg_subtitle_heading": "{{about_short}}",
-                    "sg_shadow_content": "",
+                    "sg_shadow_content": "news",
                     "sg_separator_enable": "",
                     "st_focused_typography_content_typography_typography": "custom",
                     "st_focused_typography_content_typography_font_family": "Outfit",
@@ -11337,7 +11341,8 @@
                               "url": "",
                               "id": "",
                               "size": ""
-                            }
+                            },
+                            "editor": "{{about_short}}"
                           },
                           "elements": [],
                           "isInner": false,

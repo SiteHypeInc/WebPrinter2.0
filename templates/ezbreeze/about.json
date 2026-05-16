@@ -420,11 +420,11 @@
                     {
                       "id": "2aad34e9",
                       "settings": {
-                        "sg_title_before": "",
+                        "sg_title_before": "About ",
                         "sg_title_focused": "",
                         "sg_title_text": "{{tagline}}",
-                        "sg_subtitle_heading": "{{about_short}}",
-                        "sg_shadow_content": "",
+                        "sg_subtitle_heading": "{{about_long}}",
+                        "sg_shadow_content": "news",
                         "sg_separator_enable": "",
                         "st_focused_typography_content_typography_typography": "custom",
                         "st_focused_typography_content_typography_font_family": "Outfit",
@@ -741,7 +741,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{about_long}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -1438,8 +1439,8 @@
                     "sg_title_before": "",
                     "sg_title_focused": "",
                     "sg_title_text": "{{tagline}}",
-                    "sg_subtitle_heading": "{{about_short}}",
-                    "sg_shadow_content": "",
+                    "sg_subtitle_heading": "{{about_long}}",
+                    "sg_shadow_content": "news",
                     "sg_separator_enable": "",
                     "st_title_typography_content_typography_typography": "custom",
                     "st_title_typography_content_typography_font_family": "Outfit",
@@ -4437,7 +4438,7 @@
                     "sg_title_after": "",
                     "sg_title_text": "{{tagline}}",
                     "sg_subtitle_heading": "{{about_short}}",
-                    "sg_shadow_content": "",
+                    "sg_shadow_content": "news",
                     "sg_separator_enable": "",
                     "st_title_typography_content_typography_typography": "custom",
                     "st_title_typography_content_typography_font_family": "Outfit",
@@ -4733,7 +4734,8 @@
                       "url": "",
                       "id": "",
                       "size": ""
-                    }
+                    },
+                    "editor": "{{about_short}}"
                   },
                   "elements": [],
                   "isInner": false,
@@ -5547,7 +5549,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{services._item.description}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -6053,7 +6056,8 @@
                           "url": "",
                           "id": "",
                           "size": ""
-                        }
+                        },
+                        "editor": "{{services._item.description}}"
                       },
                       "elements": [],
                       "isInner": false,
@@ -6314,10 +6318,10 @@
               "id": "1f15b457",
               "settings": {
                 "sg_title_before": "",
-                "sg_title_focused": "",
+                "sg_title_focused": "Experts",
                 "sg_title_text": "{{tagline}}",
                 "sg_subtitle_heading": "{{about_short}}",
-                "sg_shadow_content": "",
+                "sg_shadow_content": "news",
                 "sg_separator_enable": "",
                 "st_focused_typography_content_typography_typography": "custom",
                 "st_focused_typography_content_typography_font_family": "Outfit",
@@ -6552,7 +6556,8 @@
                   "url": "",
                   "id": "",
                   "size": ""
-                }
+                },
+                "editor": "{{about_short}}"
               },
               "elements": [],
               "isInner": false,
