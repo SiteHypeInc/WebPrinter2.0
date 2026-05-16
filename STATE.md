@@ -46,7 +46,7 @@ HTML pre-flight on rendered home: 0 token leaks, 0 lorem-ipsum, business name 6x
 ## Wake 14-16 follow-ups
 
 - **SSL — DONE (Wake 16).** Let's Encrypt installed via Cloudways API (`POST /api/v1/security/lets_encrypt_install` server_id=1625736 app_id=6422745 ssl_domains=getinstabid.pro,www.getinstabid.pro). Cert: CN=getinstabid.pro, SAN includes `www.getinstabid.pro`, issuer Let's Encrypt E8, valid `2026-05-16 → 2026-08-14`, auto-renew on by default. Strict-TLS HTTP/2 200 verified on main/pdx-hvac/www health endpoints.
-- **Elementor Pro — DONE (Wake 15).** v4.0.3 network-activated alongside free Elementor 4.0.8 + HFE 2.8.7. License key not yet entered (Pro features still work; only updates and a few premium things are gated). Attachment downloaded from `/api/issues/{id}/attachments` → `/api/attachments/{id}/content`.
+- **Elementor Pro — DONE (Wake 15).** v4.0.3 network-activated alongside free Elementor 4.0.8 + HFE 2.8.7. GPL build per Johnny (Wake 17) — no license key needed. `ElementorPro\Plugin` class loads, `ELEMENTOR_PRO_VERSION=4.0.3` runtime-confirmed. Attachment downloaded from `/api/issues/{id}/attachments` → `/api/attachments/{id}/content`.
 - **DNS — clean.** `getinstabid.pro` A-record is `143.198.225.106` only; Hostinger A-record dropped between Wake 12 and Wake 14 (sometime around 2026-05-16 10:00 UTC).
 - **Cloudways API key — stored in this session env only.** Johnny gave it on TEA-792 comment ac094286. He should rotate if he wants, or keep it parked for future automation (LE renewal, SSL diagnostics, server/app inventory).
 
@@ -54,7 +54,6 @@ HTML pre-flight on rendered home: 0 token leaks, 0 lorem-ipsum, business name 6x
 
 - **Modora HVAC template:** not yet in repo (only `_stock, ainexa-ai-agency, bold-v2 about.json, saas-v1`). Needs to be authored to hit ≥80 Vision QA.
 - **Image-sourcing plugin:** `image_ids` all 0 on deploy → no Pexels/SiteHype image broker wired into v5.2.1. Biggest single visual-score lift available.
-- **Elementor Pro license key (optional):** Johnny can paste later — not blocking.
 
 ---
 
