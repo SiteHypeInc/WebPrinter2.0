@@ -451,3 +451,32 @@ Screenshot quality from headless Chrome residential IP is adequate for QA scorin
 - Stock manifest: add `home-improvement` / `interior-design` categories with relevant Pexels URLs
 
 **Commit / branch:** `templates/modora/*` on `main` via direct commit `b7fface`. STATE.md update will be a separate commit.
+
+---
+
+## Wake 18 — Modora × Pyramid Heating × pdx-hvac (2026-05-16)
+
+**Goal:** Deploy modora to pdx-hvac with HVAC images, target Vision ≥80.
+
+**Deploy result:** HTTP 200, 5 pages + HFE updated, 6 images sideloaded, 0 engine errors. Live at https://getinstabid.pro/pdx-hvac/.
+
+**Vision (visual eyeball against rubric, screenshots in `/tmp/wp_shots_modora/`):** **~45/100**. Below target.
+
+**Two blockers — both in repo, not in deploy path:**
+
+1. **`templates/_stock/hvac/` is mis-curated.** Audit of every file vs `credits.json`:
+   - `hero/hvac-hero-01.jpg` → **headphones on a desk** (credits.json says HVAC tech)
+   - `action/hvac-action-01.jpg` → **programmer at a code editor** (engine injects this into 5 of 6 service tiles via `_wp_stock: action`)
+   - `team/hvac-team-01.jpg` → businessman in suit (not an HVAC technician)
+   - `hero/hvac-hero-02.jpg` → worker in hard hat (acceptable, generic)
+   - `action/hvac-action-02.jpg` → welding sparks (acceptable)
+   - Generic files not yet audited individually
+2. **Modora has hardcoded interior-design copy** (no `_wp_text` markers on body copy):
+   - Hero subtitle: "Your dream space deserves more than decoration. At {{business_name}}, we craft interiors with heart and intention."
+   - "WHO WE ARE" tile: "Interior Expertise With Artistic Vision"
+   - About H1 concatenates "{{business_name}} Interior Design Studio"
+   - Trust band: "Trusted by 25,000+ world-class brands and organizations of all sizes"
+
+Template was tokenized only for `_wp_img`, `_wp_stock`, `_wp_if`, `_wp_repeat`, `_wp_repeat_max`.
+
+**Held TEA-792 in `in_review`** with a findings comment asking Johnny to choose: (A) re-tokenize modora copy + fix `_stock/hvac/`, (B) use a different template for HVAC and keep modora for interior-design only, or (C) hybrid (fix stock library independently, decide on modora separately). No v2 deploy pushed — would not change the score with the same template + same broken stock files.
